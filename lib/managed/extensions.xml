@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extensions>
+  <extension>
+    <id>rmx_weka</id>
+    <name>Weka Extension</name>
+    <active>true</active>
+    <license>AGPL</license>
+    <selected-version>5.3.1</selected-version>
+    <installed-version>5.3.1</installed-version>
+  </extension>
+  <extension>
+    <id>rmx_featselext</id>
+    <name>Feature Selection Extension</name>
+    <active>true</active>
+    <license>AGPL</license>
+    <selected-version>1.1.4</selected-version>
+    <installed-version>1.1.4</installed-version>
+  </extension>
+  <extension>
+    <id>rmx_anomalydetection</id>
+    <name>Anomaly Detection</name>
+    <active>true</active>
+    <license>AGPL</license>
+    <selected-version>2.3.0</selected-version>
+    <installed-version>2.3.0</installed-version>
+  </extension>
+  <extension>
+    <id>rmx_parallel</id>
+    <name>Parallel Processing Extension</name>
+    <active>true</active>
+    <license>AGPL</license>
+    <selected-version>5.3.0</selected-version>
+    <installed-version>5.3.0</installed-version>
+  </extension>
+</extensions>

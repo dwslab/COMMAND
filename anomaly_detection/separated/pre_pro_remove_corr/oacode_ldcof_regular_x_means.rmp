@@ -1,0 +1,1131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="5.3.013">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="5.3.013" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="true"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="5.3.013" expanded="true" height="60" name="ReadVector" width="90" x="45" y="210">
+        <parameter key="csv_file" value="/Users/mueller/Documents/master-thesis/ontologymatcher/matchings/cmt-confOf_raw_matchings.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="trim_lines" value="true"/>
+        <parameter key="use_quotes" value="true"/>
+        <parameter key="quotes_character" value="&quot;"/>
+        <parameter key="escape_character" value="\"/>
+        <parameter key="skip_comments" value="false"/>
+        <parameter key="comment_characters" value="#"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="grouped_digits" value="false"/>
+        <parameter key="grouping_character" value=","/>
+        <parameter key="date_format" value=""/>
+        <parameter key="first_row_as_names" value="false"/>
+        <list key="annotations">
+          <parameter key="0" value="Name"/>
+        </list>
+        <parameter key="time_zone" value="SYSTEM"/>
+        <parameter key="locale" value="English (United States)"/>
+        <parameter key="encoding" value="UTF-8"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="left.true.polynominal.attribute"/>
+          <parameter key="1" value="relation.true.binominal.attribute"/>
+          <parameter key="2" value="right.true.polynominal.attribute"/>
+          <parameter key="3" value="owl_type.true.polynominal.attribute"/>
+          <parameter key="4" value="ngramDistance.true.real.attribute"/>
+          <parameter key="5" value="wuPalmer.true.real.attribute"/>
+          <parameter key="6" value="wuPalmerdeunimadwsoamatchingmatcherstructurallevelSimilarityFloodingMatcher.true.real.attribute"/>
+          <parameter key="7" value="path.true.real.attribute"/>
+          <parameter key="8" value="lin.true.real.attribute"/>
+          <parameter key="9" value="level2_jara_winklerdeunimadwsoamatchingmatcherstructurallevelGraphBasedUsedPropertyMatcher.true.real.attribute"/>
+          <parameter key="10" value="jaroWinklerMeasuredeunimadwsoamatchingmatcherstructurallevelGraphBasedUsedPropertyMatcher.true.real.attribute"/>
+          <parameter key="11" value="jaroWinklerMeasure.true.real.attribute"/>
+          <parameter key="12" value="word2Vec.true.real.attribute"/>
+          <parameter key="13" value="level2_jara_winkler.true.real.attribute"/>
+          <parameter key="14" value="prefix.true.real.attribute"/>
+          <parameter key="15" value="level2_jara_winklerdeunimadwsoamatchingmatcherstructurallevelSimilarityFloodingMatcher.true.real.attribute"/>
+          <parameter key="16" value="ngramDistancedeunimadwsoamatchingmatcherstructurallevelGraphBasedUsedPropertyMatcher.true.real.attribute"/>
+          <parameter key="17" value="word2VecStemmed.true.real.attribute"/>
+          <parameter key="18" value="jaccard.true.real.attribute"/>
+          <parameter key="19" value="level2_monge_elkan.true.real.attribute"/>
+          <parameter key="20" value="suffix.true.real.attribute"/>
+          <parameter key="21" value="esaSim.true.real.attribute"/>
+          <parameter key="22" value="level2_jaro.true.real.attribute"/>
+          <parameter key="23" value="wuPalmerdeunimadwsoamatchingmatcherstructurallevelGraphBasedUsedPropertyMatcher.true.real.attribute"/>
+          <parameter key="24" value="smoaDistance.true.real.attribute"/>
+          <parameter key="25" value="jiangConrath.true.real.attribute"/>
+          <parameter key="26" value="needlemanWunsch2Distance.true.real.attribute"/>
+          <parameter key="27" value="umbcSim.true.real.attribute"/>
+          <parameter key="28" value="soft_tfidf_jaro.true.real.attribute"/>
+          <parameter key="29" value="mongeElkan.true.real.attribute"/>
+          <parameter key="30" value="simple_tfidf.true.real.attribute"/>
+          <parameter key="31" value="jaro_winkler_tfidf.true.real.attribute"/>
+          <parameter key="32" value="levenshteinDistance.true.real.attribute"/>
+          <parameter key="33" value="hammingDistance.true.real.attribute"/>
+          <parameter key="34" value="equalDistance.true.real.attribute"/>
+          <parameter key="35" value="subStringDistance.true.real.attribute"/>
+          <parameter key="36" value="ngramDistancedeunimadwsoamatchingmatcherstructurallevelSimilarityFloodingMatcher.true.real.attribute"/>
+          <parameter key="37" value="jaroWinklerMeasuredeunimadwsoamatchingmatcherstructurallevelSimilarityFloodingMatcher.true.real.attribute"/>
+          <parameter key="38" value="jaroMeasure.true.real.attribute"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="true"/>
+        <parameter key="datamanagement" value="double_array"/>
+      </operator>
+      <operator activated="true" class="subprocess" compatibility="5.3.013" expanded="true" height="112" name="Split Data" width="90" x="179" y="210">
+        <parameter key="parallelize_nested_chain" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="filter_examples" compatibility="5.3.013" expanded="true" height="76" name="Classes (2)" width="90" x="338" y="30">
+            <parameter key="condition_class" value="attribute_value_filter"/>
+            <parameter key="parameter_string" value="owl_type=c"/>
+            <parameter key="invert_filter" value="false"/>
+          </operator>
+          <operator activated="true" class="filter_examples" compatibility="5.3.013" expanded="true" height="76" name="Data Props (2)" width="90" x="447" y="210">
+            <parameter key="condition_class" value="attribute_value_filter"/>
+            <parameter key="parameter_string" value="owl_type=dp"/>
+            <parameter key="invert_filter" value="false"/>
+          </operator>
+          <operator activated="true" class="filter_examples" compatibility="5.3.013" expanded="true" height="76" name="Object Props (2)" width="90" x="514" y="390">
+            <parameter key="condition_class" value="attribute_value_filter"/>
+            <parameter key="parameter_string" value="owl_type=op"/>
+            <parameter key="invert_filter" value="false"/>
+          </operator>
+          <connect from_port="in 1" to_op="Classes (2)" to_port="example set input"/>
+          <connect from_op="Classes (2)" from_port="example set output" to_port="out 1"/>
+          <connect from_op="Classes (2)" from_port="original" to_op="Data Props (2)" to_port="example set input"/>
+          <connect from_op="Data Props (2)" from_port="example set output" to_port="out 2"/>
+          <connect from_op="Data Props (2)" from_port="original" to_op="Object Props (2)" to_port="example set input"/>
+          <connect from_op="Object Props (2)" from_port="example set output" to_port="out 3"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+          <portSpacing port="sink_out 3" spacing="0"/>
+          <portSpacing port="sink_out 4" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="handle_exception" compatibility="5.3.013" expanded="true" height="76" name="Handle Exception (2)" width="90" x="313" y="390">
+        <parameter key="parallelize_try" value="false"/>
+        <parameter key="parallelize_catch" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="subprocess" compatibility="5.3.013" expanded="true" height="76" name="DB CBLOF Regular (3)" width="90" x="112" y="210">
+            <parameter key="parallelize_nested_chain" value="false"/>
+            <process expanded="true">
+              <operator activated="true" class="generate_id" compatibility="5.3.013" expanded="true" height="76" name="Generate ID (4)" width="90" x="45" y="30">
+                <parameter key="create_nominal_ids" value="false"/>
+                <parameter key="offset" value="0"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (12)" width="90" x="180" y="30">
+                <parameter key="attribute_filter_type" value="subset"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value="left|relation|right|owl_type"/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (13)" width="90" x="315" y="30">
+                <parameter key="attribute_filter_type" value="subset"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value="id|left|relation|right|owl_type"/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="subprocess" compatibility="5.3.013" expanded="true" height="94" name="Preprocess Remove Corr (3)" width="90" x="313" y="345">
+                <parameter key="parallelize_nested_chain" value="false"/>
+                <process expanded="true">
+                  <operator activated="true" class="replace_missing_values" compatibility="5.3.013" expanded="true" height="94" name="Replace Missing Values (2)" width="90" x="45" y="30">
+                    <parameter key="return_preprocessing_model" value="false"/>
+                    <parameter key="create_view" value="false"/>
+                    <parameter key="attribute_filter_type" value="all"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value=""/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="default" value="zero"/>
+                    <list key="columns"/>
+                  </operator>
+                  <operator activated="true" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (2)" width="90" x="180" y="30">
+                    <parameter key="return_preprocessing_model" value="false"/>
+                    <parameter key="create_view" value="false"/>
+                    <parameter key="attribute_filter_type" value="all"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value=""/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="numeric"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="real"/>
+                    <parameter key="block_type" value="value_series"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_series_end"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="method" value="Z-transformation"/>
+                    <parameter key="min" value="0.0"/>
+                    <parameter key="max" value="1.0"/>
+                  </operator>
+                  <operator activated="true" class="generate_aggregation" compatibility="5.3.013" expanded="true" height="76" name="Generate Aggregation (2)" width="90" x="315" y="30">
+                    <parameter key="attribute_name" value="sum"/>
+                    <parameter key="attribute_filter_type" value="subset"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value="cluster|id||outlier"/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="true"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="aggregation_function" value="sum"/>
+                    <parameter key="keep_all" value="true"/>
+                    <parameter key="ignore_missings" value="true"/>
+                  </operator>
+                  <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (4)" width="90" x="550" y="39">
+                    <parameter key="attribute_filter_type" value="subset"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value="id||sum"/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                  </operator>
+                  <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (5)" width="90" x="585" y="30">
+                    <parameter key="attribute_filter_type" value="subset"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value="sum|"/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="true"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                  </operator>
+                  <operator activated="true" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (3)" width="90" x="45" y="120">
+                    <parameter key="return_preprocessing_model" value="false"/>
+                    <parameter key="create_view" value="false"/>
+                    <parameter key="attribute_filter_type" value="all"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value=""/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="numeric"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="real"/>
+                    <parameter key="block_type" value="value_series"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_series_end"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="method" value="range transformation"/>
+                    <parameter key="min" value="-1.0"/>
+                    <parameter key="max" value="1.0"/>
+                  </operator>
+                  <operator activated="true" class="remove_useless_attributes" compatibility="5.3.013" expanded="true" height="76" name="REMOVE_USELESS_OP" width="90" x="179" y="345">
+                    <parameter key="numerical_min_deviation" value="0.1"/>
+                    <parameter key="nominal_useless_above" value="1.0"/>
+                    <parameter key="nominal_remove_id_like" value="false"/>
+                    <parameter key="nominal_useless_below" value="0.0"/>
+                  </operator>
+                  <operator activated="true" class="remove_correlated_attributes" compatibility="5.3.013" expanded="true" height="76" name="REMOVE_CORRELATED_OP" width="90" x="447" y="345">
+                    <parameter key="correlation" value="0.95"/>
+                    <parameter key="filter_relation" value="greater"/>
+                    <parameter key="attribute_order" value="original"/>
+                    <parameter key="use_absolute_correlation" value="true"/>
+                    <parameter key="use_local_random_seed" value="false"/>
+                    <parameter key="local_random_seed" value="1992"/>
+                  </operator>
+                  <connect from_port="in 1" to_op="Replace Missing Values (2)" to_port="example set input"/>
+                  <connect from_op="Replace Missing Values (2)" from_port="example set output" to_op="Normalize (2)" to_port="example set input"/>
+                  <connect from_op="Normalize (2)" from_port="example set output" to_op="Generate Aggregation (2)" to_port="example set input"/>
+                  <connect from_op="Generate Aggregation (2)" from_port="example set output" to_op="Select Attributes (4)" to_port="example set input"/>
+                  <connect from_op="Select Attributes (4)" from_port="example set output" to_port="out 2"/>
+                  <connect from_op="Select Attributes (4)" from_port="original" to_op="Select Attributes (5)" to_port="example set input"/>
+                  <connect from_op="Select Attributes (5)" from_port="example set output" to_op="Normalize (3)" to_port="example set input"/>
+                  <connect from_op="Normalize (3)" from_port="example set output" to_op="REMOVE_USELESS_OP" to_port="example set input"/>
+                  <connect from_op="REMOVE_USELESS_OP" from_port="example set output" to_op="REMOVE_CORRELATED_OP" to_port="example set input"/>
+                  <connect from_op="REMOVE_CORRELATED_OP" from_port="example set output" to_port="out 1"/>
+                  <portSpacing port="source_in 1" spacing="0"/>
+                  <portSpacing port="source_in 2" spacing="0"/>
+                  <portSpacing port="sink_out 1" spacing="0"/>
+                  <portSpacing port="sink_out 2" spacing="0"/>
+                  <portSpacing port="sink_out 3" spacing="0"/>
+                </process>
+              </operator>
+              <operator activated="true" class="subprocess" compatibility="5.3.013" expanded="true" height="76" name="DBSCAN CBLOF (4)" width="90" x="585" y="30">
+                <parameter key="parallelize_nested_chain" value="false"/>
+                <process expanded="true">
+                  <operator activated="true" class="x_means" compatibility="5.3.013" expanded="true" height="76" name="XMEANS_OP" width="90" x="45" y="30">
+                    <parameter key="add_cluster_attribute" value="true"/>
+                    <parameter key="add_as_label" value="false"/>
+                    <parameter key="remove_unlabeled" value="false"/>
+                    <parameter key="k_min" value="2"/>
+                    <parameter key="k_max" value="60"/>
+                    <parameter key="determine_good_start_values" value="false"/>
+                    <parameter key="measure_types" value="NumericalMeasures"/>
+                    <parameter key="mixed_measure" value="MixedEuclideanDistance"/>
+                    <parameter key="nominal_measure" value="NominalDistance"/>
+                    <parameter key="numerical_measure" value="EuclideanDistance"/>
+                    <parameter key="divergence" value="GeneralizedIDivergence"/>
+                    <parameter key="kernel_type" value="radial"/>
+                    <parameter key="kernel_gamma" value="1.0"/>
+                    <parameter key="kernel_sigma1" value="1.0"/>
+                    <parameter key="kernel_sigma2" value="0.0"/>
+                    <parameter key="kernel_sigma3" value="2.0"/>
+                    <parameter key="kernel_degree" value="3.0"/>
+                    <parameter key="kernel_shift" value="1.0"/>
+                    <parameter key="kernel_a" value="1.0"/>
+                    <parameter key="kernel_b" value="0.0"/>
+                    <parameter key="clustering_algorithm" value="KMeans"/>
+                    <parameter key="max_runs" value="10"/>
+                    <parameter key="max_optimization_steps" value="100"/>
+                    <parameter key="use_local_random_seed" value="false"/>
+                    <parameter key="local_random_seed" value="1992"/>
+                  </operator>
+                  <operator activated="true" class="anomalydetection:Local Density Cluster-Based Outlier Factor (LDCOF)" compatibility="2.3.000" expanded="true" height="94" name="LDCOF_OP" width="90" x="246" y="210">
+                    <parameter key="measure_types" value="MixedMeasures"/>
+                    <parameter key="mixed_measure" value="MixedEuclideanDistance"/>
+                    <parameter key="nominal_measure" value="NominalDistance"/>
+                    <parameter key="numerical_measure" value="EuclideanDistance"/>
+                    <parameter key="divergence" value="GeneralizedIDivergence"/>
+                    <parameter key="kernel_type" value="radial"/>
+                    <parameter key="kernel_gamma" value="1.0"/>
+                    <parameter key="kernel_sigma1" value="1.0"/>
+                    <parameter key="kernel_sigma2" value="0.0"/>
+                    <parameter key="kernel_sigma3" value="2.0"/>
+                    <parameter key="kernel_degree" value="3.0"/>
+                    <parameter key="kernel_shift" value="1.0"/>
+                    <parameter key="kernel_a" value="1.0"/>
+                    <parameter key="kernel_b" value="0.0"/>
+                    <parameter key="divide clusters like cblof" value="false"/>
+                    <parameter key="alpha" value="90.0"/>
+                    <parameter key="beta" value="5.0"/>
+                    <parameter key="gamma" value="0.1"/>
+                  </operator>
+                  <connect from_port="in 1" to_op="XMEANS_OP" to_port="example set"/>
+                  <connect from_op="XMEANS_OP" from_port="cluster model" to_op="LDCOF_OP" to_port="cluster Model"/>
+                  <connect from_op="XMEANS_OP" from_port="clustered set" to_op="LDCOF_OP" to_port="clustered set"/>
+                  <connect from_op="LDCOF_OP" from_port="clustered set" to_port="out 1"/>
+                  <portSpacing port="source_in 1" spacing="0"/>
+                  <portSpacing port="source_in 2" spacing="0"/>
+                  <portSpacing port="sink_out 1" spacing="0"/>
+                  <portSpacing port="sink_out 2" spacing="0"/>
+                </process>
+              </operator>
+              <operator activated="true" class="join" compatibility="5.3.013" expanded="true" height="76" name="Join (6)" width="90" x="45" y="120">
+                <parameter key="remove_double_attributes" value="true"/>
+                <parameter key="join_type" value="inner"/>
+                <parameter key="use_id_attribute_as_key" value="true"/>
+                <list key="key_attributes"/>
+                <parameter key="keep_both_join_attributes" value="false"/>
+              </operator>
+              <operator activated="true" class="filter_examples" compatibility="5.3.013" expanded="true" height="76" name="Only Positive (4)" width="90" x="180" y="120">
+                <parameter key="condition_class" value="attribute_value_filter"/>
+                <parameter key="parameter_string" value="sum &gt;0"/>
+                <parameter key="invert_filter" value="false"/>
+              </operator>
+              <operator activated="true" class="join" compatibility="5.3.013" expanded="true" height="76" name="Join (7)" width="90" x="315" y="120">
+                <parameter key="remove_double_attributes" value="true"/>
+                <parameter key="join_type" value="inner"/>
+                <parameter key="use_id_attribute_as_key" value="false"/>
+                <list key="key_attributes">
+                  <parameter key="id" value="id"/>
+                </list>
+                <parameter key="keep_both_join_attributes" value="false"/>
+              </operator>
+              <operator activated="true" class="generate_attributes" compatibility="5.3.013" expanded="true" height="76" name="Generate Attributes (4)" width="90" x="450" y="120">
+                <list key="function_descriptions">
+                  <parameter key="outlier" value="max(0,outlier-0.5)"/>
+                </list>
+                <parameter key="use_standard_constants" value="true"/>
+                <parameter key="keep_all" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (16)" width="90" x="617" y="75">
+                <parameter key="attribute_filter_type" value="subset"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value="id|sum|cluster"/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <connect from_port="in 1" to_op="Generate ID (4)" to_port="example set input"/>
+              <connect from_op="Generate ID (4)" from_port="example set output" to_op="Select Attributes (12)" to_port="example set input"/>
+              <connect from_op="Select Attributes (12)" from_port="example set output" to_op="Preprocess Remove Corr (3)" to_port="in 1"/>
+              <connect from_op="Select Attributes (12)" from_port="original" to_op="Select Attributes (13)" to_port="example set input"/>
+              <connect from_op="Select Attributes (13)" from_port="example set output" to_op="Join (7)" to_port="left"/>
+              <connect from_op="Preprocess Remove Corr (3)" from_port="out 1" to_op="DBSCAN CBLOF (4)" to_port="in 1"/>
+              <connect from_op="Preprocess Remove Corr (3)" from_port="out 2" to_op="Join (6)" to_port="right"/>
+              <connect from_op="DBSCAN CBLOF (4)" from_port="out 1" to_op="Join (6)" to_port="left"/>
+              <connect from_op="Join (6)" from_port="join" to_op="Only Positive (4)" to_port="example set input"/>
+              <connect from_op="Only Positive (4)" from_port="example set output" to_op="Join (7)" to_port="right"/>
+              <connect from_op="Join (7)" from_port="join" to_op="Generate Attributes (4)" to_port="example set input"/>
+              <connect from_op="Generate Attributes (4)" from_port="example set output" to_op="Select Attributes (16)" to_port="example set input"/>
+              <connect from_op="Select Attributes (16)" from_port="example set output" to_port="out 1"/>
+              <portSpacing port="source_in 1" spacing="0"/>
+              <portSpacing port="source_in 2" spacing="0"/>
+              <portSpacing port="sink_out 1" spacing="0"/>
+              <portSpacing port="sink_out 2" spacing="0"/>
+            </process>
+          </operator>
+          <connect from_port="in 1" to_op="DB CBLOF Regular (3)" to_port="in 1"/>
+          <connect from_op="DB CBLOF Regular (3)" from_port="out 1" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+        <process expanded="true">
+          <connect from_port="in 1" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="handle_exception" compatibility="5.3.013" expanded="true" height="76" name="Handle Exception" width="90" x="313" y="255">
+        <parameter key="parallelize_try" value="false"/>
+        <parameter key="parallelize_catch" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="subprocess" compatibility="5.3.013" expanded="true" height="76" name="DB CBLOF Regular (2)" width="90" x="313" y="165">
+            <parameter key="parallelize_nested_chain" value="false"/>
+            <process expanded="true">
+              <operator activated="true" class="generate_id" compatibility="5.3.013" expanded="true" height="76" name="Generate ID (3)" width="90" x="45" y="30">
+                <parameter key="create_nominal_ids" value="false"/>
+                <parameter key="offset" value="0"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (2)" width="90" x="180" y="30">
+                <parameter key="attribute_filter_type" value="subset"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value="left|relation|right|owl_type"/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (3)" width="90" x="313" y="30">
+                <parameter key="attribute_filter_type" value="subset"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value="id|left|relation|right|owl_type"/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="subprocess" compatibility="5.3.013" expanded="true" height="94" name="Preprocess Remove Corr (2)" width="90" x="380" y="300">
+                <parameter key="parallelize_nested_chain" value="false"/>
+                <process expanded="true">
+                  <operator activated="true" class="replace_missing_values" compatibility="5.3.013" expanded="true" height="94" name="Replace Missing Values (3)" width="90" x="45" y="30">
+                    <parameter key="return_preprocessing_model" value="false"/>
+                    <parameter key="create_view" value="false"/>
+                    <parameter key="attribute_filter_type" value="all"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value=""/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="default" value="zero"/>
+                    <list key="columns"/>
+                  </operator>
+                  <operator activated="true" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (4)" width="90" x="180" y="30">
+                    <parameter key="return_preprocessing_model" value="false"/>
+                    <parameter key="create_view" value="false"/>
+                    <parameter key="attribute_filter_type" value="all"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value=""/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="numeric"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="real"/>
+                    <parameter key="block_type" value="value_series"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_series_end"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="method" value="Z-transformation"/>
+                    <parameter key="min" value="0.0"/>
+                    <parameter key="max" value="1.0"/>
+                  </operator>
+                  <operator activated="true" class="generate_aggregation" compatibility="5.3.013" expanded="true" height="76" name="Generate Aggregation (3)" width="90" x="315" y="30">
+                    <parameter key="attribute_name" value="sum"/>
+                    <parameter key="attribute_filter_type" value="subset"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value="cluster|id||outlier"/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="true"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="aggregation_function" value="sum"/>
+                    <parameter key="keep_all" value="true"/>
+                    <parameter key="ignore_missings" value="true"/>
+                  </operator>
+                  <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (9)" width="90" x="550" y="39">
+                    <parameter key="attribute_filter_type" value="subset"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value="id||sum"/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                  </operator>
+                  <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (10)" width="90" x="585" y="30">
+                    <parameter key="attribute_filter_type" value="subset"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value="sum|"/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="true"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                  </operator>
+                  <operator activated="true" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (6)" width="90" x="45" y="120">
+                    <parameter key="return_preprocessing_model" value="false"/>
+                    <parameter key="create_view" value="false"/>
+                    <parameter key="attribute_filter_type" value="all"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value=""/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="numeric"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="real"/>
+                    <parameter key="block_type" value="value_series"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_series_end"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="method" value="range transformation"/>
+                    <parameter key="min" value="-1.0"/>
+                    <parameter key="max" value="1.0"/>
+                  </operator>
+                  <operator activated="true" class="remove_useless_attributes" compatibility="5.3.013" expanded="true" height="76" name="REMOVE_USELESS_DP" width="90" x="179" y="120">
+                    <parameter key="numerical_min_deviation" value="0.1"/>
+                    <parameter key="nominal_useless_above" value="1.0"/>
+                    <parameter key="nominal_remove_id_like" value="false"/>
+                    <parameter key="nominal_useless_below" value="0.0"/>
+                  </operator>
+                  <operator activated="true" class="remove_correlated_attributes" compatibility="5.3.013" expanded="true" height="76" name="REMOVE_CORRELATED_DP" width="90" x="482" y="75">
+                    <parameter key="correlation" value="0.95"/>
+                    <parameter key="filter_relation" value="greater"/>
+                    <parameter key="attribute_order" value="original"/>
+                    <parameter key="use_absolute_correlation" value="true"/>
+                    <parameter key="use_local_random_seed" value="false"/>
+                    <parameter key="local_random_seed" value="1992"/>
+                  </operator>
+                  <connect from_port="in 1" to_op="Replace Missing Values (3)" to_port="example set input"/>
+                  <connect from_op="Replace Missing Values (3)" from_port="example set output" to_op="Normalize (4)" to_port="example set input"/>
+                  <connect from_op="Normalize (4)" from_port="example set output" to_op="Generate Aggregation (3)" to_port="example set input"/>
+                  <connect from_op="Generate Aggregation (3)" from_port="example set output" to_op="Select Attributes (9)" to_port="example set input"/>
+                  <connect from_op="Select Attributes (9)" from_port="example set output" to_port="out 2"/>
+                  <connect from_op="Select Attributes (9)" from_port="original" to_op="Select Attributes (10)" to_port="example set input"/>
+                  <connect from_op="Select Attributes (10)" from_port="example set output" to_op="Normalize (6)" to_port="example set input"/>
+                  <connect from_op="Normalize (6)" from_port="example set output" to_op="REMOVE_USELESS_DP" to_port="example set input"/>
+                  <connect from_op="REMOVE_USELESS_DP" from_port="example set output" to_op="REMOVE_CORRELATED_DP" to_port="example set input"/>
+                  <connect from_op="REMOVE_CORRELATED_DP" from_port="example set output" to_port="out 1"/>
+                  <portSpacing port="source_in 1" spacing="0"/>
+                  <portSpacing port="source_in 2" spacing="0"/>
+                  <portSpacing port="sink_out 1" spacing="0"/>
+                  <portSpacing port="sink_out 2" spacing="0"/>
+                  <portSpacing port="sink_out 3" spacing="0"/>
+                </process>
+              </operator>
+              <operator activated="true" class="subprocess" compatibility="5.3.013" expanded="true" height="76" name="DBSCAN CBLOF (3)" width="90" x="585" y="30">
+                <parameter key="parallelize_nested_chain" value="false"/>
+                <process expanded="true">
+                  <operator activated="true" class="x_means" compatibility="5.3.013" expanded="true" height="76" name="XMEANS_DP" width="90" x="45" y="30">
+                    <parameter key="add_cluster_attribute" value="true"/>
+                    <parameter key="add_as_label" value="false"/>
+                    <parameter key="remove_unlabeled" value="false"/>
+                    <parameter key="k_min" value="2"/>
+                    <parameter key="k_max" value="60"/>
+                    <parameter key="determine_good_start_values" value="false"/>
+                    <parameter key="measure_types" value="NumericalMeasures"/>
+                    <parameter key="mixed_measure" value="MixedEuclideanDistance"/>
+                    <parameter key="nominal_measure" value="NominalDistance"/>
+                    <parameter key="numerical_measure" value="EuclideanDistance"/>
+                    <parameter key="divergence" value="GeneralizedIDivergence"/>
+                    <parameter key="kernel_type" value="radial"/>
+                    <parameter key="kernel_gamma" value="1.0"/>
+                    <parameter key="kernel_sigma1" value="1.0"/>
+                    <parameter key="kernel_sigma2" value="0.0"/>
+                    <parameter key="kernel_sigma3" value="2.0"/>
+                    <parameter key="kernel_degree" value="3.0"/>
+                    <parameter key="kernel_shift" value="1.0"/>
+                    <parameter key="kernel_a" value="1.0"/>
+                    <parameter key="kernel_b" value="0.0"/>
+                    <parameter key="clustering_algorithm" value="KMeans"/>
+                    <parameter key="max_runs" value="10"/>
+                    <parameter key="max_optimization_steps" value="100"/>
+                    <parameter key="use_local_random_seed" value="false"/>
+                    <parameter key="local_random_seed" value="1992"/>
+                  </operator>
+                  <operator activated="true" class="anomalydetection:Local Density Cluster-Based Outlier Factor (LDCOF)" compatibility="2.3.000" expanded="true" height="94" name="LDCOF_DP" width="90" x="179" y="30">
+                    <parameter key="measure_types" value="MixedMeasures"/>
+                    <parameter key="mixed_measure" value="MixedEuclideanDistance"/>
+                    <parameter key="nominal_measure" value="NominalDistance"/>
+                    <parameter key="numerical_measure" value="EuclideanDistance"/>
+                    <parameter key="divergence" value="GeneralizedIDivergence"/>
+                    <parameter key="kernel_type" value="radial"/>
+                    <parameter key="kernel_gamma" value="1.0"/>
+                    <parameter key="kernel_sigma1" value="1.0"/>
+                    <parameter key="kernel_sigma2" value="0.0"/>
+                    <parameter key="kernel_sigma3" value="2.0"/>
+                    <parameter key="kernel_degree" value="3.0"/>
+                    <parameter key="kernel_shift" value="1.0"/>
+                    <parameter key="kernel_a" value="1.0"/>
+                    <parameter key="kernel_b" value="0.0"/>
+                    <parameter key="divide clusters like cblof" value="false"/>
+                    <parameter key="alpha" value="90.0"/>
+                    <parameter key="beta" value="5.0"/>
+                    <parameter key="gamma" value="0.1"/>
+                  </operator>
+                  <connect from_port="in 1" to_op="XMEANS_DP" to_port="example set"/>
+                  <connect from_op="XMEANS_DP" from_port="cluster model" to_op="LDCOF_DP" to_port="cluster Model"/>
+                  <connect from_op="XMEANS_DP" from_port="clustered set" to_op="LDCOF_DP" to_port="clustered set"/>
+                  <connect from_op="LDCOF_DP" from_port="clustered set" to_port="out 1"/>
+                  <portSpacing port="source_in 1" spacing="0"/>
+                  <portSpacing port="source_in 2" spacing="0"/>
+                  <portSpacing port="sink_out 1" spacing="0"/>
+                  <portSpacing port="sink_out 2" spacing="0"/>
+                </process>
+              </operator>
+              <operator activated="true" class="join" compatibility="5.3.013" expanded="true" height="76" name="Join (2)" width="90" x="45" y="120">
+                <parameter key="remove_double_attributes" value="true"/>
+                <parameter key="join_type" value="inner"/>
+                <parameter key="use_id_attribute_as_key" value="true"/>
+                <list key="key_attributes"/>
+                <parameter key="keep_both_join_attributes" value="false"/>
+              </operator>
+              <operator activated="true" class="filter_examples" compatibility="5.3.013" expanded="true" height="76" name="Only Positive (3)" width="90" x="180" y="120">
+                <parameter key="condition_class" value="attribute_value_filter"/>
+                <parameter key="parameter_string" value="sum &gt;0"/>
+                <parameter key="invert_filter" value="false"/>
+              </operator>
+              <operator activated="true" class="join" compatibility="5.3.013" expanded="true" height="76" name="Join (5)" width="90" x="315" y="120">
+                <parameter key="remove_double_attributes" value="true"/>
+                <parameter key="join_type" value="inner"/>
+                <parameter key="use_id_attribute_as_key" value="false"/>
+                <list key="key_attributes">
+                  <parameter key="id" value="id"/>
+                </list>
+                <parameter key="keep_both_join_attributes" value="false"/>
+              </operator>
+              <operator activated="true" class="generate_attributes" compatibility="5.3.013" expanded="true" height="76" name="Generate Attributes (2)" width="90" x="450" y="120">
+                <list key="function_descriptions">
+                  <parameter key="outlier" value="max(0,outlier-0.5)"/>
+                </list>
+                <parameter key="use_standard_constants" value="true"/>
+                <parameter key="keep_all" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (8)" width="90" x="570" y="75">
+                <parameter key="attribute_filter_type" value="subset"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value="id|sum|cluster"/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <connect from_port="in 1" to_op="Generate ID (3)" to_port="example set input"/>
+              <connect from_op="Generate ID (3)" from_port="example set output" to_op="Select Attributes (2)" to_port="example set input"/>
+              <connect from_op="Select Attributes (2)" from_port="example set output" to_op="Preprocess Remove Corr (2)" to_port="in 1"/>
+              <connect from_op="Select Attributes (2)" from_port="original" to_op="Select Attributes (3)" to_port="example set input"/>
+              <connect from_op="Select Attributes (3)" from_port="example set output" to_op="Join (5)" to_port="left"/>
+              <connect from_op="Preprocess Remove Corr (2)" from_port="out 1" to_op="DBSCAN CBLOF (3)" to_port="in 1"/>
+              <connect from_op="Preprocess Remove Corr (2)" from_port="out 2" to_op="Join (2)" to_port="right"/>
+              <connect from_op="DBSCAN CBLOF (3)" from_port="out 1" to_op="Join (2)" to_port="left"/>
+              <connect from_op="Join (2)" from_port="join" to_op="Only Positive (3)" to_port="example set input"/>
+              <connect from_op="Only Positive (3)" from_port="example set output" to_op="Join (5)" to_port="right"/>
+              <connect from_op="Join (5)" from_port="join" to_op="Generate Attributes (2)" to_port="example set input"/>
+              <connect from_op="Generate Attributes (2)" from_port="example set output" to_op="Select Attributes (8)" to_port="example set input"/>
+              <connect from_op="Select Attributes (8)" from_port="example set output" to_port="out 1"/>
+              <portSpacing port="source_in 1" spacing="0"/>
+              <portSpacing port="source_in 2" spacing="0"/>
+              <portSpacing port="sink_out 1" spacing="0"/>
+              <portSpacing port="sink_out 2" spacing="0"/>
+            </process>
+          </operator>
+          <connect from_port="in 1" to_op="DB CBLOF Regular (2)" to_port="in 1"/>
+          <connect from_op="DB CBLOF Regular (2)" from_port="out 1" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+        <process expanded="true">
+          <operator activated="false" class="delete_file" compatibility="5.3.013" expanded="true" height="60" name="DeleteFile_DP" width="90" x="179" y="165">
+            <parameter key="file" value="/Users/mueller/Documents/master-thesis/oaMatcherCode/dp_result2.csv"/>
+            <parameter key="fail_if_missing" value="false"/>
+          </operator>
+          <connect from_port="in 1" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="generate_attributes" compatibility="5.3.013" expanded="true" height="76" name="Regular (2)" width="90" x="447" y="255">
+        <list key="function_descriptions">
+          <parameter key="outlier" value="max(0,outlier-0.5)"/>
+        </list>
+        <parameter key="use_standard_constants" value="true"/>
+        <parameter key="keep_all" value="true"/>
+      </operator>
+      <operator activated="true" class="print_to_console" compatibility="5.3.013" expanded="true" height="76" name="Print to Console (2)" width="90" x="581" y="255">
+        <parameter key="log_value" value="Done with dp"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="5.3.013" expanded="true" height="76" name="Output_DP" width="90" x="715" y="255">
+        <parameter key="csv_file" value="/Users/mueller/Documents/master-thesis/oaMatcherCode/dp_result2.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <operator activated="true" class="handle_exception" compatibility="5.3.013" expanded="true" height="76" name="Handle Exception (3)" width="90" x="313" y="75">
+        <parameter key="parallelize_try" value="false"/>
+        <parameter key="parallelize_catch" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="subprocess" compatibility="5.3.013" expanded="true" height="76" name="DB CBLOF Regular" width="90" x="112" y="120">
+            <parameter key="parallelize_nested_chain" value="false"/>
+            <process expanded="true">
+              <operator activated="true" class="generate_id" compatibility="5.3.013" expanded="true" height="76" name="Generate ID (2)" width="90" x="45" y="30">
+                <parameter key="create_nominal_ids" value="false"/>
+                <parameter key="offset" value="0"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (6)" width="90" x="180" y="30">
+                <parameter key="attribute_filter_type" value="subset"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value="left|relation|right|owl_type"/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (7)" width="90" x="315" y="30">
+                <parameter key="attribute_filter_type" value="subset"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value="id|left|relation|right|owl_type"/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="subprocess" compatibility="5.3.013" expanded="true" height="94" name="Preprocess Remove Corr" width="90" x="450" y="30">
+                <parameter key="parallelize_nested_chain" value="false"/>
+                <process expanded="true">
+                  <operator activated="true" class="replace_missing_values" compatibility="5.3.013" expanded="true" height="94" name="Replace Missing Values (5)" width="90" x="45" y="30">
+                    <parameter key="return_preprocessing_model" value="false"/>
+                    <parameter key="create_view" value="false"/>
+                    <parameter key="attribute_filter_type" value="all"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value=""/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="default" value="zero"/>
+                    <list key="columns"/>
+                  </operator>
+                  <operator activated="true" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (8)" width="90" x="180" y="30">
+                    <parameter key="return_preprocessing_model" value="false"/>
+                    <parameter key="create_view" value="false"/>
+                    <parameter key="attribute_filter_type" value="all"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value=""/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="numeric"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="real"/>
+                    <parameter key="block_type" value="value_series"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_series_end"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="method" value="Z-transformation"/>
+                    <parameter key="min" value="0.0"/>
+                    <parameter key="max" value="1.0"/>
+                  </operator>
+                  <operator activated="true" class="generate_aggregation" compatibility="5.3.013" expanded="true" height="76" name="Generate Aggregation (5)" width="90" x="315" y="30">
+                    <parameter key="attribute_name" value="sum"/>
+                    <parameter key="attribute_filter_type" value="subset"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value="cluster|id||outlier"/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="true"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="aggregation_function" value="sum"/>
+                    <parameter key="keep_all" value="true"/>
+                    <parameter key="ignore_missings" value="true"/>
+                  </operator>
+                  <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (17)" width="90" x="550" y="39">
+                    <parameter key="attribute_filter_type" value="subset"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value="id||sum"/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                  </operator>
+                  <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (18)" width="90" x="585" y="30">
+                    <parameter key="attribute_filter_type" value="subset"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value="sum|"/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="attribute_value"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="time"/>
+                    <parameter key="block_type" value="attribute_block"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_matrix_row_start"/>
+                    <parameter key="invert_selection" value="true"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                  </operator>
+                  <operator activated="true" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (9)" width="90" x="45" y="120">
+                    <parameter key="return_preprocessing_model" value="false"/>
+                    <parameter key="create_view" value="false"/>
+                    <parameter key="attribute_filter_type" value="all"/>
+                    <parameter key="attribute" value=""/>
+                    <parameter key="attributes" value=""/>
+                    <parameter key="use_except_expression" value="false"/>
+                    <parameter key="value_type" value="numeric"/>
+                    <parameter key="use_value_type_exception" value="false"/>
+                    <parameter key="except_value_type" value="real"/>
+                    <parameter key="block_type" value="value_series"/>
+                    <parameter key="use_block_type_exception" value="false"/>
+                    <parameter key="except_block_type" value="value_series_end"/>
+                    <parameter key="invert_selection" value="false"/>
+                    <parameter key="include_special_attributes" value="false"/>
+                    <parameter key="method" value="range transformation"/>
+                    <parameter key="min" value="-1.0"/>
+                    <parameter key="max" value="1.0"/>
+                  </operator>
+                  <operator activated="true" class="remove_useless_attributes" compatibility="5.3.013" expanded="true" height="76" name="REMOVE_USELESS_C" width="90" x="179" y="255">
+                    <parameter key="numerical_min_deviation" value="0.1"/>
+                    <parameter key="nominal_useless_above" value="1.0"/>
+                    <parameter key="nominal_remove_id_like" value="false"/>
+                    <parameter key="nominal_useless_below" value="0.0"/>
+                  </operator>
+                  <operator activated="true" class="remove_correlated_attributes" compatibility="5.3.013" expanded="true" height="76" name="REMOVE_CORRELATED_C" width="90" x="447" y="300">
+                    <parameter key="correlation" value="0.95"/>
+                    <parameter key="filter_relation" value="greater"/>
+                    <parameter key="attribute_order" value="original"/>
+                    <parameter key="use_absolute_correlation" value="true"/>
+                    <parameter key="use_local_random_seed" value="false"/>
+                    <parameter key="local_random_seed" value="1992"/>
+                  </operator>
+                  <connect from_port="in 1" to_op="Replace Missing Values (5)" to_port="example set input"/>
+                  <connect from_op="Replace Missing Values (5)" from_port="example set output" to_op="Normalize (8)" to_port="example set input"/>
+                  <connect from_op="Normalize (8)" from_port="example set output" to_op="Generate Aggregation (5)" to_port="example set input"/>
+                  <connect from_op="Generate Aggregation (5)" from_port="example set output" to_op="Select Attributes (17)" to_port="example set input"/>
+                  <connect from_op="Select Attributes (17)" from_port="example set output" to_port="out 2"/>
+                  <connect from_op="Select Attributes (17)" from_port="original" to_op="Select Attributes (18)" to_port="example set input"/>
+                  <connect from_op="Select Attributes (18)" from_port="example set output" to_op="Normalize (9)" to_port="example set input"/>
+                  <connect from_op="Normalize (9)" from_port="example set output" to_op="REMOVE_USELESS_C" to_port="example set input"/>
+                  <connect from_op="REMOVE_USELESS_C" from_port="example set output" to_op="REMOVE_CORRELATED_C" to_port="example set input"/>
+                  <connect from_op="REMOVE_CORRELATED_C" from_port="example set output" to_port="out 1"/>
+                  <portSpacing port="source_in 1" spacing="0"/>
+                  <portSpacing port="source_in 2" spacing="0"/>
+                  <portSpacing port="sink_out 1" spacing="0"/>
+                  <portSpacing port="sink_out 2" spacing="0"/>
+                  <portSpacing port="sink_out 3" spacing="0"/>
+                </process>
+              </operator>
+              <operator activated="true" class="subprocess" compatibility="5.3.013" expanded="true" height="76" name="DBSCAN CBLOF (2)" width="90" x="585" y="30">
+                <parameter key="parallelize_nested_chain" value="false"/>
+                <process expanded="true">
+                  <operator activated="true" class="x_means" compatibility="5.3.013" expanded="true" height="76" name="XMEANS_C" width="90" x="45" y="30">
+                    <parameter key="add_cluster_attribute" value="true"/>
+                    <parameter key="add_as_label" value="false"/>
+                    <parameter key="remove_unlabeled" value="false"/>
+                    <parameter key="k_min" value="2"/>
+                    <parameter key="k_max" value="60"/>
+                    <parameter key="determine_good_start_values" value="false"/>
+                    <parameter key="measure_types" value="NumericalMeasures"/>
+                    <parameter key="mixed_measure" value="MixedEuclideanDistance"/>
+                    <parameter key="nominal_measure" value="NominalDistance"/>
+                    <parameter key="numerical_measure" value="EuclideanDistance"/>
+                    <parameter key="divergence" value="GeneralizedIDivergence"/>
+                    <parameter key="kernel_type" value="radial"/>
+                    <parameter key="kernel_gamma" value="1.0"/>
+                    <parameter key="kernel_sigma1" value="1.0"/>
+                    <parameter key="kernel_sigma2" value="0.0"/>
+                    <parameter key="kernel_sigma3" value="2.0"/>
+                    <parameter key="kernel_degree" value="3.0"/>
+                    <parameter key="kernel_shift" value="1.0"/>
+                    <parameter key="kernel_a" value="1.0"/>
+                    <parameter key="kernel_b" value="0.0"/>
+                    <parameter key="clustering_algorithm" value="KMeans"/>
+                    <parameter key="max_runs" value="10"/>
+                    <parameter key="max_optimization_steps" value="100"/>
+                    <parameter key="use_local_random_seed" value="false"/>
+                    <parameter key="local_random_seed" value="1992"/>
+                  </operator>
+                  <operator activated="true" class="anomalydetection:Local Density Cluster-Based Outlier Factor (LDCOF)" compatibility="2.3.000" expanded="true" height="94" name="LDCOF_C" width="90" x="179" y="30">
+                    <parameter key="measure_types" value="MixedMeasures"/>
+                    <parameter key="mixed_measure" value="MixedEuclideanDistance"/>
+                    <parameter key="nominal_measure" value="NominalDistance"/>
+                    <parameter key="numerical_measure" value="EuclideanDistance"/>
+                    <parameter key="divergence" value="GeneralizedIDivergence"/>
+                    <parameter key="kernel_type" value="radial"/>
+                    <parameter key="kernel_gamma" value="1.0"/>
+                    <parameter key="kernel_sigma1" value="1.0"/>
+                    <parameter key="kernel_sigma2" value="0.0"/>
+                    <parameter key="kernel_sigma3" value="2.0"/>
+                    <parameter key="kernel_degree" value="3.0"/>
+                    <parameter key="kernel_shift" value="1.0"/>
+                    <parameter key="kernel_a" value="1.0"/>
+                    <parameter key="kernel_b" value="0.0"/>
+                    <parameter key="divide clusters like cblof" value="false"/>
+                    <parameter key="alpha" value="90.0"/>
+                    <parameter key="beta" value="5.0"/>
+                    <parameter key="gamma" value="0.1"/>
+                  </operator>
+                  <connect from_port="in 1" to_op="XMEANS_C" to_port="example set"/>
+                  <connect from_op="XMEANS_C" from_port="cluster model" to_op="LDCOF_C" to_port="cluster Model"/>
+                  <connect from_op="XMEANS_C" from_port="clustered set" to_op="LDCOF_C" to_port="clustered set"/>
+                  <connect from_op="LDCOF_C" from_port="clustered set" to_port="out 1"/>
+                  <portSpacing port="source_in 1" spacing="0"/>
+                  <portSpacing port="source_in 2" spacing="0"/>
+                  <portSpacing port="sink_out 1" spacing="0"/>
+                  <portSpacing port="sink_out 2" spacing="0"/>
+                </process>
+              </operator>
+              <operator activated="true" class="join" compatibility="5.3.013" expanded="true" height="76" name="Join (3)" width="90" x="45" y="120">
+                <parameter key="remove_double_attributes" value="true"/>
+                <parameter key="join_type" value="inner"/>
+                <parameter key="use_id_attribute_as_key" value="true"/>
+                <list key="key_attributes"/>
+                <parameter key="keep_both_join_attributes" value="false"/>
+              </operator>
+              <operator activated="true" class="filter_examples" compatibility="5.3.013" expanded="true" height="76" name="Only Positive (2)" width="90" x="180" y="120">
+                <parameter key="condition_class" value="attribute_value_filter"/>
+                <parameter key="parameter_string" value="sum &gt;0"/>
+                <parameter key="invert_filter" value="false"/>
+              </operator>
+              <operator activated="true" class="join" compatibility="5.3.013" expanded="true" height="76" name="Join (4)" width="90" x="315" y="120">
+                <parameter key="remove_double_attributes" value="true"/>
+                <parameter key="join_type" value="inner"/>
+                <parameter key="use_id_attribute_as_key" value="false"/>
+                <list key="key_attributes">
+                  <parameter key="id" value="id"/>
+                </list>
+                <parameter key="keep_both_join_attributes" value="false"/>
+              </operator>
+              <operator activated="true" class="generate_attributes" compatibility="5.3.013" expanded="true" height="76" name="Generate Attributes (3)" width="90" x="450" y="120">
+                <list key="function_descriptions">
+                  <parameter key="outlier" value="max(0,outlier-0.5)"/>
+                </list>
+                <parameter key="use_standard_constants" value="true"/>
+                <parameter key="keep_all" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="5.3.013" expanded="true" height="76" name="Select Attributes (11)" width="90" x="585" y="120">
+                <parameter key="attribute_filter_type" value="subset"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value="id|sum|cluster"/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <connect from_port="in 1" to_op="Generate ID (2)" to_port="example set input"/>
+              <connect from_op="Generate ID (2)" from_port="example set output" to_op="Select Attributes (6)" to_port="example set input"/>
+              <connect from_op="Select Attributes (6)" from_port="example set output" to_op="Preprocess Remove Corr" to_port="in 1"/>
+              <connect from_op="Select Attributes (6)" from_port="original" to_op="Select Attributes (7)" to_port="example set input"/>
+              <connect from_op="Select Attributes (7)" from_port="example set output" to_op="Join (4)" to_port="left"/>
+              <connect from_op="Preprocess Remove Corr" from_port="out 1" to_op="DBSCAN CBLOF (2)" to_port="in 1"/>
+              <connect from_op="Preprocess Remove Corr" from_port="out 2" to_op="Join (3)" to_port="right"/>
+              <connect from_op="DBSCAN CBLOF (2)" from_port="out 1" to_op="Join (3)" to_port="left"/>
+              <connect from_op="Join (3)" from_port="join" to_op="Only Positive (2)" to_port="example set input"/>
+              <connect from_op="Only Positive (2)" from_port="example set output" to_op="Join (4)" to_port="right"/>
+              <connect from_op="Join (4)" from_port="join" to_op="Generate Attributes (3)" to_port="example set input"/>
+              <connect from_op="Generate Attributes (3)" from_port="example set output" to_op="Select Attributes (11)" to_port="example set input"/>
+              <connect from_op="Select Attributes (11)" from_port="example set output" to_port="out 1"/>
+              <portSpacing port="source_in 1" spacing="0"/>
+              <portSpacing port="source_in 2" spacing="0"/>
+              <portSpacing port="sink_out 1" spacing="0"/>
+              <portSpacing port="sink_out 2" spacing="0"/>
+            </process>
+          </operator>
+          <connect from_port="in 1" to_op="DB CBLOF Regular" to_port="in 1"/>
+          <connect from_op="DB CBLOF Regular" from_port="out 1" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+        <process expanded="true">
+          <connect from_port="in 1" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="generate_attributes" compatibility="5.3.013" expanded="true" height="76" name="Regular" width="90" x="447" y="75">
+        <list key="function_descriptions">
+          <parameter key="outlier" value="max(0,outlier-0.5)"/>
+        </list>
+        <parameter key="use_standard_constants" value="true"/>
+        <parameter key="keep_all" value="true"/>
+      </operator>
+      <operator activated="true" class="print_to_console" compatibility="5.3.013" expanded="true" height="76" name="Print to Console" width="90" x="581" y="75">
+        <parameter key="log_value" value="Done with classes"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="5.3.013" expanded="true" height="76" name="Output_C" width="90" x="715" y="75">
+        <parameter key="csv_file" value="/Users/mueller/Documents/master-thesis/oaMatcherCode/classes_result2.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <operator activated="true" class="generate_attributes" compatibility="5.3.013" expanded="true" height="76" name="Regular (3)" width="90" x="447" y="390">
+        <list key="function_descriptions">
+          <parameter key="outlier" value="max(0,outlier-0.5)"/>
+        </list>
+        <parameter key="use_standard_constants" value="true"/>
+        <parameter key="keep_all" value="true"/>
+      </operator>
+      <operator activated="true" class="print_to_console" compatibility="5.3.013" expanded="true" height="76" name="Print to Console (3)" width="90" x="581" y="390">
+        <parameter key="log_value" value="Done with op"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="5.3.013" expanded="true" height="76" name="Output_OP" width="90" x="715" y="390">
+        <parameter key="csv_file" value="/Users/mueller/Documents/master-thesis/oaMatcherCode/op_result2.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <connect from_op="ReadVector" from_port="output" to_op="Split Data" to_port="in 1"/>
+      <connect from_op="Split Data" from_port="out 1" to_op="Handle Exception (3)" to_port="in 1"/>
+      <connect from_op="Split Data" from_port="out 2" to_op="Handle Exception" to_port="in 1"/>
+      <connect from_op="Split Data" from_port="out 3" to_op="Handle Exception (2)" to_port="in 1"/>
+      <connect from_op="Handle Exception (2)" from_port="out 1" to_op="Regular (3)" to_port="example set input"/>
+      <connect from_op="Handle Exception" from_port="out 1" to_op="Regular (2)" to_port="example set input"/>
+      <connect from_op="Regular (2)" from_port="example set output" to_op="Print to Console (2)" to_port="through 1"/>
+      <connect from_op="Print to Console (2)" from_port="through 1" to_op="Output_DP" to_port="input"/>
+      <connect from_op="Output_DP" from_port="through" to_port="result 2"/>
+      <connect from_op="Handle Exception (3)" from_port="out 1" to_op="Regular" to_port="example set input"/>
+      <connect from_op="Regular" from_port="example set output" to_op="Print to Console" to_port="through 1"/>
+      <connect from_op="Print to Console" from_port="through 1" to_op="Output_C" to_port="input"/>
+      <connect from_op="Output_C" from_port="through" to_port="result 1"/>
+      <connect from_op="Regular (3)" from_port="example set output" to_op="Print to Console (3)" to_port="through 1"/>
+      <connect from_op="Print to Console (3)" from_port="through 1" to_op="Output_OP" to_port="input"/>
+      <connect from_op="Output_OP" from_port="through" to_port="result 3"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+    </process>
+  </operator>
+</process>

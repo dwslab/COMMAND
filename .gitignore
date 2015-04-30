@@ -1,0 +1,6 @@
+ontos/
+*.log
+target/
+.idea
+project/
+*.lexicon
