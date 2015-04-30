@@ -1,5 +1,5 @@
 # COMMAND
-COMMAND is a novel approach for dynamically selecting and combining ontology matchers. The key idea is to use outler or anomaly detection for the combination of matchers. The system is completely unsupervised and can be used for any ontology matching problem of owl ontologies.
+COMMAND is a novel approach for dynamically selecting and combining ontology matchers. The key idea is to use outlier or anomaly detection for the combination of matchers. The system is completely unsupervised and can be used for any ontology matching problem of owl ontologies.
 
 
 ## Dependencies
