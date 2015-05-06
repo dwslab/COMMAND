@@ -15,6 +15,7 @@ object UMBCSimilarity {
     }
     catch {
       case e: Throwable => {
+        println(e)
         //logger.error(s"error at umbc phrase sim: $phrase1, $phrase2", e)
         0.0
       }
@@ -25,7 +26,8 @@ object UMBCSimilarity {
 
   def umbcSim(term1: String, term2: String): Double = {
     try {
-      semantic_sim.getSimilarity(term1, term2, true)
+      val res = semantic_sim.getSimilarity(term1, term2, true)
+      res
     }
     catch {
       case e: Throwable => {

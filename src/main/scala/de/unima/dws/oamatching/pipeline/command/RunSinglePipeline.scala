@@ -20,7 +20,11 @@ object RunSinglePipeline extends App with LazyLogging {
 
 
   RapidminerJobs.quit()
-  SparkJobs.sc.cancelAllJobs()
-  SparkJobs.sc.stop()
+  try {
+    SparkJobs.sc.cancelAllJobs()
+    SparkJobs.sc.stop()
+  }catch{
+    case e:Throwable => println("bla")
+  }
   System.exit(0)
 }

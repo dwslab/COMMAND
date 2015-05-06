@@ -5,7 +5,6 @@ import java.io.File
 import com.github.tototoshi.csv.{CSVReader, CSVWriter}
 import com.rapidminer.{Process => RProcess, RapidMiner}
 import com.typesafe.scalalogging.slf4j.LazyLogging
-import de.unima.dws.oamatching.alex.XMLTest
 import de.unima.dws.oamatching.config.Config
 import de.unima.dws.oamatching.core.MatchRelation
 import de.unima.dws.oamatching.pipeline.FeatureVector

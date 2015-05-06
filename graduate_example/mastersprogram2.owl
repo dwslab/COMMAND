@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.dwslab.de/master_alex/graduate_program"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://www.dwslab.de/master_alex/graduate_program">
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Declaration>
+        <Class IRI="#Exam"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ExternalInstructor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GraduateProgram"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GraduateStudent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Instructor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#InternalInstructor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Lecture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Student"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#UndergraduateStudent"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#about_content_of"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#holds"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#part_of"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#takes"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#writes"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#has_grade"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#has_id"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#has_name"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="#ExternalInstructor"/>
+        <Class IRI="#Instructor"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GraduateStudent"/>
+        <Class IRI="#Student"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#InternalInstructor"/>
+        <Class IRI="#Instructor"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#UndergraduateStudent"/>
+        <Class IRI="#Student"/>
+    </SubClassOf>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#about_content_of"/>
+        <Class IRI="#Exam"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#holds"/>
+        <Class IRI="#Instructor"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#part_of"/>
+        <Class IRI="#Lecture"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#takes"/>
+        <Class IRI="#Student"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#writes"/>
+        <Class IRI="#Student"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#about_content_of"/>
+        <Class IRI="#Lecture"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#holds"/>
+        <Class IRI="#Lecture"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#part_of"/>
+        <Class IRI="#GraduateProgram"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#takes"/>
+        <Class IRI="#Lecture"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#writes"/>
+        <Class IRI="#Exam"/>
+    </ObjectPropertyRange>
+    <DataPropertyDomain>
+        <DataProperty IRI="#has_grade"/>
+        <Class IRI="#Exam"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#has_id"/>
+        <Class IRI="#Student"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#has_name"/>
+        <Class IRI="#GraduateProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#has_name"/>
+        <Class IRI="#Instructor"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#has_name"/>
+        <Class IRI="#Student"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#has_grade"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#has_id"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#has_name"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net -->
+

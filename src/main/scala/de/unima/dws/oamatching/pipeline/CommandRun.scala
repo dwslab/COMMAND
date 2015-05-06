@@ -41,7 +41,7 @@ object CommandRun extends LazyLogging {
     //write alignment to file
     AlignmentParser.writeRDF(alignment, "alignments/" + config.matchingProblem.name + ".rdf")
     //check if evaluation neccessary
-    val total = TimeTaker.takeTime("pipeline_and_evaluate")1
+    val total = TimeTaker.takeTime("pipeline_and_evaluate")
     if (config.evaluate) {
       val evaluation_result = alignment.evaluate(config.reference.get)
       Option(evaluation_result)
