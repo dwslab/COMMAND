@@ -10,6 +10,7 @@ import de.unima.dws.oamatching.core.matcher.{Matcher, StructuralLevelMatcher}
 import de.unima.dws.oamatching.core.{Alignment, FastOntology, MatchRelation}
 import de.unima.dws.oamatching.matcher.MatcherRegistry
 import de.unima.dws.oamatching.pipeline.registry.SelectionRegistry
+import de.unima.dws.oamatching.pipeline.util.TimeTaker
 
 import scala.collection.immutable.Map
 import scala.collection.parallel.ForkJoinTaskSupport
@@ -58,11 +59,7 @@ object MatchingPipelineCore extends LazyLogging {
   }
 
   def matchProblemSeparated(outlierFct: (String, FeatureVector) => SeparatedResults)(normFct: (Int, Map[String, (Double, Double)], Map[MatchRelation, Double]) => Iterable[(MatchRelation, Double)])(problem: MatchingProblem, class_threshold: Double, dp_threshold: Double, op_threshold: Double, remove_correlated_threshold: Double): (Alignment, FeatureVector) = {
-    val start_time = System.currentTimeMillis()
-    val onto1_namespace = problem.ontology1.name
-    val onto2_namespace = problem.ontology2.name
-
-
+    TimeTaker.takeTime("single_pipeline")
     val reuse_vectors = Config.loaded_config.getBoolean("oaei.reuse_vectors")
     //check if matching already exists then use this one
 
@@ -78,12 +75,16 @@ object MatchingPipelineCore extends LazyLogging {
       createFeatureVector(problem, remove_correlated_threshold, true)
     }
     //check if feature vector already exists
-
+    TimeTaker.takeTime("aggregration")
     val outlier_analysis_result_separated = outlierFct(problem.name, filtered_outlier_analysis_vector)
-
+    TimeTaker.takeTime("aggregration")
     //post processing, so normalization and feature selection
+    TimeTaker.takeTime("extraction")
     val alignment: Alignment = postProcessSeparatedMatchings(normFct, class_threshold, dp_threshold, op_threshold, outlier_analysis_result_separated, problem)
 
+
+    TimeTaker.takeTime("extraction")
+    TimeTaker.takeTime("single_pipeline")
     (alignment, filtered_outlier_analysis_vector)
   }
 
@@ -96,6 +97,7 @@ object MatchingPipelineCore extends LazyLogging {
    */
   def createFeatureVector(problem: MatchingProblem, remove_correlated_threshold: Double, name_space_filter: Boolean): FeatureVector = {
 
+    TimeTaker.takeTime("feature_vector")
     logger.info("Start element Level Matching")
     val onto1_namespace = problem.ontology1.name
     val onto2_namespace = problem.ontology2.name
@@ -131,6 +133,9 @@ object MatchingPipelineCore extends LazyLogging {
       name_space_filtered
     }
     logger.info("After feature selection Vector Size" + feature_selected.matcher_name_to_index.size)
+
+    TimeTaker.takeTime("feature_vector")
+
     feature_selected
   }
 

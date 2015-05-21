@@ -42,9 +42,7 @@ abstract class ElementLevelMatcher(val similarity: Boolean, val useLabel: Boolea
       while (n < onto2.base_values.classes.size) {
         entity2 = onto2.base_values.classes.get(n)
 
-        if(onto1.classes_to_names.get(entity1).get.equals("Teacher") && onto2.classes_to_names.get(entity2).get.equals("Intstructor")) {
-          println("bla")
-        }
+
         alignment.correspondences.addAll(alignClass(entity1, entity2, onto1.classes_to_names.get(entity1).get, onto2.classes_to_names.get(entity2).get, threshold))
         n = n + 1
       }

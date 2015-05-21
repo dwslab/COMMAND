@@ -9,7 +9,7 @@ import de.unima.dws.oamatching.config.Config
 import de.unima.dws.oamatching.core._
 import de.unima.dws.oamatching.matcher.MatcherRegistry
 import de.unima.dws.oamatching.pipeline.evaluation.EvaluationMatchingRunner
-import de.unima.dws.oamatching.pipeline.registry.OutlierRegistry
+import de.unima.dws.oamatching.pipeline.registry.{ScoreNormalizationRegistry, OutlierRegistry}
 import de.unima.dws.oamatching.pipeline.util.TimeTaker
 
 import scala.collection.JavaConversions._
@@ -59,8 +59,8 @@ object CommandRun extends LazyLogging {
   def runRound(config: RunConfiguration): Unit = {
     TimeTaker.takeTime("pipeline_and_evaluate")
 
-    val path_to_ds = Config.loaded_config.getString("pipeline.path_to_dataset")
-    val ds_name = Config.loaded_config.getString("pipeline.dataset_type")
+    val path_to_ds = Config.loaded_config.getString("oaei.path_to_dataset")
+    val ds_name = Config.loaded_config.getString("oaei.dataset_type")
     EvaluationMatchingRunner.matchAndEvaluateOAEI(path_to_ds, ds_name, config)
     val total = TimeTaker.takeTime("pipeline_and_evaluate")
 
@@ -128,7 +128,7 @@ object CommandRun extends LazyLogging {
 
     val outlier_function = RapidminerJobs.rapidminerOutlierDetection(rapidminerProcess.get, Config.loaded_config.getString("rapidminerconfig.tmp"), process_type, parameters, pre_pro) _
     val outlier_function_separated = RapidminerJobs.rapidminerOutlierDetectionSeparated(rapidminerProcess.get, Config.loaded_config.getString("rapidminerconfig.tmp"), process_type, parameters, pre_pro) _
-    val norm_function = ScoreNormalizationFunctions.getNormFunction(norm_technique)
+    val norm_function = ScoreNormalizationRegistry.getNormFunction(norm_technique)
     val matching_pipline: (MatchingProblem, Double, Double) => (Alignment, FeatureVector) = MatchingPipelineCore.createMatchingPipeline(outlier_function)(norm_function)
     val matching_pipline_separated: (MatchingProblem, Double, Double, Double, Double) => (Alignment, FeatureVector) = MatchingPipelineCore.createMatchingPipelineSeparated(outlier_function_separated)(norm_function)
 
@@ -174,7 +174,7 @@ object CommandRun extends LazyLogging {
 
     val outlier_function = RapidminerJobs.rapidminerOutlierDetection(rapidminerProcess.get, Config.loaded_config.getString("rapidminerconfig.tmp"), process_type, parameters, pre_pro) _
     val outlier_function_separated = RapidminerJobs.rapidminerOutlierDetectionSeparated(rapidminerProcess.get, Config.loaded_config.getString("rapidminerconfig.tmp"), process_type, parameters, pre_pro) _
-    val norm_function = ScoreNormalizationFunctions.getNormFunction(norm_technique)
+    val norm_function = ScoreNormalizationRegistry.getNormFunction(norm_technique)
     val matching_pipline: (MatchingProblem, Double, Double) => (Alignment, FeatureVector) = MatchingPipelineCore.createMatchingPipeline(outlier_function)(norm_function)
     val matching_pipline_separated: (MatchingProblem, Double, Double, Double, Double) => (Alignment, FeatureVector) = MatchingPipelineCore.createMatchingPipelineSeparated(outlier_function_separated)(norm_function)
 

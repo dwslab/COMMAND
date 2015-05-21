@@ -149,7 +149,7 @@
                     <parameter key="default" value="zero"/>
                     <list key="columns"/>
                   </operator>
-                  <operator activated="true" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (5)" width="90" x="180" y="30">
+                  <operator activated="false" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (5)" width="90" x="180" y="30">
                     <parameter key="return_preprocessing_model" value="false"/>
                     <parameter key="create_view" value="false"/>
                     <parameter key="attribute_filter_type" value="all"/>
@@ -239,8 +239,7 @@
                     <parameter key="max" value="1.0"/>
                   </operator>
                   <connect from_port="in 1" to_op="Replace Missing Values (4)" to_port="example set input"/>
-                  <connect from_op="Replace Missing Values (4)" from_port="example set output" to_op="Normalize (5)" to_port="example set input"/>
-                  <connect from_op="Normalize (5)" from_port="example set output" to_op="Generate Aggregation (4)" to_port="example set input"/>
+                  <connect from_op="Replace Missing Values (4)" from_port="example set output" to_op="Generate Aggregation (4)" to_port="example set input"/>
                   <connect from_op="Generate Aggregation (4)" from_port="example set output" to_op="Select Attributes (14)" to_port="example set input"/>
                   <connect from_op="Select Attributes (14)" from_port="example set output" to_port="out 2"/>
                   <connect from_op="Select Attributes (14)" from_port="original" to_op="Select Attributes (15)" to_port="example set input"/>
@@ -447,7 +446,7 @@
                     <parameter key="default" value="zero"/>
                     <list key="columns"/>
                   </operator>
-                  <operator activated="true" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (2)" width="90" x="180" y="30">
+                  <operator activated="false" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (2)" width="90" x="180" y="30">
                     <parameter key="return_preprocessing_model" value="false"/>
                     <parameter key="create_view" value="false"/>
                     <parameter key="attribute_filter_type" value="all"/>
@@ -518,8 +517,7 @@
                     <parameter key="number_of_components" value="10"/>
                   </operator>
                   <connect from_port="in 1" to_op="Replace Missing Values (2)" to_port="example set input"/>
-                  <connect from_op="Replace Missing Values (2)" from_port="example set output" to_op="Normalize (2)" to_port="example set input"/>
-                  <connect from_op="Normalize (2)" from_port="example set output" to_op="Generate Aggregation (2)" to_port="example set input"/>
+                  <connect from_op="Replace Missing Values (2)" from_port="example set output" to_op="Generate Aggregation (2)" to_port="example set input"/>
                   <connect from_op="Generate Aggregation (2)" from_port="example set output" to_op="Select Attributes (4)" to_port="example set input"/>
                   <connect from_op="Select Attributes (4)" from_port="example set output" to_port="out 2"/>
                   <connect from_op="Select Attributes (4)" from_port="original" to_op="Select Attributes (5)" to_port="example set input"/>
@@ -730,7 +728,7 @@
                     <parameter key="default" value="zero"/>
                     <list key="columns"/>
                   </operator>
-                  <operator activated="true" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (4)" width="90" x="180" y="30">
+                  <operator activated="false" class="normalize" compatibility="5.3.013" expanded="true" height="94" name="Normalize (4)" width="90" x="180" y="30">
                     <parameter key="return_preprocessing_model" value="false"/>
                     <parameter key="create_view" value="false"/>
                     <parameter key="attribute_filter_type" value="all"/>
@@ -801,8 +799,7 @@
                     <parameter key="number_of_components" value="10"/>
                   </operator>
                   <connect from_port="in 1" to_op="Replace Missing Values (3)" to_port="example set input"/>
-                  <connect from_op="Replace Missing Values (3)" from_port="example set output" to_op="Normalize (4)" to_port="example set input"/>
-                  <connect from_op="Normalize (4)" from_port="example set output" to_op="Generate Aggregation (3)" to_port="example set input"/>
+                  <connect from_op="Replace Missing Values (3)" from_port="example set output" to_op="Generate Aggregation (3)" to_port="example set input"/>
                   <connect from_op="Generate Aggregation (3)" from_port="example set output" to_op="Select Attributes (9)" to_port="example set input"/>
                   <connect from_op="Select Attributes (9)" from_port="example set output" to_port="out 2"/>
                   <connect from_op="Select Attributes (9)" from_port="original" to_op="Select Attributes (10)" to_port="example set input"/>

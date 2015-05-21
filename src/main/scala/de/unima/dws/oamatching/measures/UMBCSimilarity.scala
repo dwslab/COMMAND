@@ -15,7 +15,7 @@ object UMBCSimilarity {
     }
     catch {
       case e: Throwable => {
-        println(e)
+        //println(e)
         //logger.error(s"error at umbc phrase sim: $phrase1, $phrase2", e)
         0.0
       }

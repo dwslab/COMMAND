@@ -1,16 +1,16 @@
-package de.unima.dws.oamatching.pipeline
+package de.unima.dws.oamatching.pipeline.registry
 
 import de.unima.dws.oamatching.core.MatchRelation
 import org.apache.commons.math.stat.descriptive.moment.Mean
+import org.apache.commons.math3.special.{Erf, Gamma}
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation
-import org.apache.commons.math3.special.{Gamma, Erf}
 
 import scala.collection.immutable.Map
 
 /**
  * Created by mueller on 10/02/15.
  */
-object ScoreNormalizationFunctions {
+object ScoreNormalizationRegistry {
   val stdev_computer = new StandardDeviation()
   val mean_computer = new Mean()
 
