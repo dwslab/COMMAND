@@ -298,7 +298,7 @@ object OntologyLoader {
 
     val owlClassToNames: Map[IRI, ExtractedFields] = owlOntology.getClassesInSignature().filter(filterNotOWLThing).map(owlClass => {
       //Fragment
-      val local_name = Option(owlClass.getIRI.getRemainder.get())
+      val local_name = Option(owlClass.getIRI.getFragment())
 
 
       val e_label = extractAnnotationOfType(owlOntology, owlClass, label)
@@ -314,7 +314,7 @@ object OntologyLoader {
       ################################################################################################################*/
     val owlObjectPropertiesToNames: Map[IRI, ExtractedFields] = owlOntology.getObjectPropertiesInSignature().map(owlProp => {
       //Fragment
-      val local_name = Option(owlProp.getIRI.getRemainder.get())
+      val local_name = Option(owlProp.getIRI.getFragment())
 
       val e_label = extractAnnotationOfType(owlOntology, owlProp, label)
       val e_comment = extractAnnotationOfType(owlOntology, owlProp, comment)
@@ -332,7 +332,7 @@ object OntologyLoader {
 
     val owlDataPropertiesToNames: Map[IRI, ExtractedFields] = owlOntology.getDataPropertiesInSignature().map(owlProp => {
       //Fragment
-      val local_name = Option(owlProp.getIRI.getRemainder.get())
+      val local_name = Option(owlProp.getIRI.getFragment())
 
       val e_label = extractAnnotationOfType(owlOntology, owlProp, label)
       val e_comment = extractAnnotationOfType(owlOntology, owlProp, comment)
@@ -379,7 +379,7 @@ object OntologyLoader {
 
     val synonym_label = owlEntity.getAnnotations(owlOntology).map(annotation => {
       val prop_iri = annotation.getProperty().getIRI()
-      val remainder = prop_iri.getRemainder.get()
+      val remainder = prop_iri.getFragment()
 
       if (remainder.toLowerCase.contains("synonym")) {
 

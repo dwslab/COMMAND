@@ -2,7 +2,8 @@ package de.unima.dws.oamatching.pipeline.evaluation
 
 import java.io.File
 
-import de.unima.alcomox.ontology.IOntology
+
+import de.dwslab.alcomox.ontology.IOntology
 import de.unima.dws.oamatching.core.{Alignment, AlignmentParser, OntologyLoader}
 import de.unima.dws.oamatching.pipeline.MatchingProblem
 

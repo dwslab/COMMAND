@@ -7,7 +7,7 @@ import com.github.tototoshi.csv.CSVWriter
 import com.hp.hpl.jena.rdf.model._
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl
 import com.hp.hpl.jena.util.FileManager
-import de.unima.alcomox.ontology.IOntology
+import de.dwslab.alcomox.ontology.IOntology
 import org.semanticweb.owlapi.model.{OWLObject, OWLLiteral, OWLOntology}
 
 import scala.collection.JavaConversions._
@@ -74,13 +74,14 @@ object AlignmentParser {
     //map to cells
     val correspondences = alignment_cells.map(cell => {
       if (cell.isResource) {
-        val test = cell.asInstanceOf[ResourceImpl]
-        val relation: String = test.getProperty(model.createProperty(namespace + "relation")).getString
+        val cell_casted = cell.asInstanceOf[ResourceImpl]
+        val relation_uncleaned: String = cell_casted.getProperty(model.createProperty(namespace + "relation")).getString.trim
+        val relation:String =  relation_uncleaned.replaceAll("\\s","")
 
-        val measure: Double = test.getProperty(model.createProperty(namespace + "measure")).getLiteral.getLexicalForm.toDouble
+        val measure: Double = cell_casted.getProperty(model.createProperty(namespace + "measure")).getLiteral.getLexicalForm.toDouble
 
-        val entity1: URI = new URI(test.getProperty(model.createProperty(namespace + "entity1")).getResource.getURI)
-        val entity2: URI = new URI(test.getProperty(model.createProperty(namespace + "entity2")).getResource.getURI)
+        val entity1: URI = new URI(cell_casted.getProperty(model.createProperty(namespace + "entity1")).getResource.getURI)
+        val entity2: URI = new URI(cell_casted.getProperty(model.createProperty(namespace + "entity2")).getResource.getURI)
 
         Option(MatchingCell(entity1.toString, entity2.toString, measure, relation, Cell.TYPE_UNKOWN, Alignment.TYPE_NONE))
 
@@ -170,7 +171,10 @@ object AlignmentParser {
     val correspondences = alignment_cells.map(cell => {
       if (cell.isResource) {
         val cell_casted = cell.asInstanceOf[ResourceImpl]
-        val relation: String = cell_casted.getProperty(model.createProperty(namespace + "relation")).getString
+
+
+        val relation_uncleaned: String = cell_casted.getProperty(model.createProperty(namespace + "relation")).getString.trim
+        val relation:String =  relation_uncleaned.replaceAll("\\s","")
 
         val measure: Double = cell_casted.getProperty(model.createProperty(namespace + "measure")).getLiteral.getLexicalForm.toDouble
 
@@ -190,7 +194,7 @@ object AlignmentParser {
           Cell.TYPE_UNKOWN
         }
 
-        Option(MatchingCell(entity1.toString, entity2.toString, measure, relation, cell_type, Alignment.TYPE_NONE))
+        Option(MatchingCell(entity1.toString, entity2.toString, measure, "=", cell_type, Alignment.TYPE_NONE))
       } else {
         //means that in the alignment is an empty mapping in the form
         // <map>
@@ -270,12 +274,8 @@ object AlignmentParser {
         <Cell>
           <entity1 rdf:resource={entity1}/>
           <entity2 rdf:resource={entity2}/>
-          <measure rdf:datatype='xsd:float'>
-            {measure}
-          </measure>
-          <relation>
-            {relation}
-          </relation>
+          <measure rdf:datatype='xsd:float'>{measure}</measure>
+          <relation>{relation}</relation>
         </Cell>
       </map>
     }

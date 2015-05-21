@@ -31,7 +31,7 @@ object SparkJobs extends  LazyLogging{
     .setAppName("Alex Master Thesis")
     .setMaster("local[2]")
     .set("spark.executor.memory", "4g")
-    //.set("spark.rdd.compress", "true")
+
 
   val sc = new SparkContext(conf)
   val word_2_vec_model = loadWord2VecModel(Config.WORD_2_VEC_MODEL_PATH)

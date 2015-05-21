@@ -4,3 +4,4 @@ target/
 .idea
 project/
 *.lexicon
+models/

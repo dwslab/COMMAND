@@ -3,7 +3,7 @@ package de.unima.dws.oamatching.pipeline
 import java.io.File
 
 import com.typesafe.scalalogging.slf4j.LazyLogging
-import de.unima.alcomox.ontology.IOntology
+import de.dwslab.alcomox.ontology.IOntology
 import de.unima.dws.oamatching.analysis.{SeparatedResults, SparkJobs}
 import de.unima.dws.oamatching.config.Config
 import de.unima.dws.oamatching.core.matcher.{Matcher, StructuralLevelMatcher}

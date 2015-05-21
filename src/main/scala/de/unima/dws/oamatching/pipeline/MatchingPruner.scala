@@ -1,9 +1,9 @@
 package de.unima.dws.oamatching.pipeline
 
 import com.typesafe.scalalogging.slf4j.LazyLogging
-import de.unima.alcomox.mapping.{Correspondence, Mapping, SemanticRelation}
-import de.unima.alcomox.ontology.IOntology
-import de.unima.alcomox.{ExtractionProblem, Settings}
+import de.dwslab.alcomox.mapping.{Correspondence, Mapping, SemanticRelation}
+import de.dwslab.alcomox.ontology.IOntology
+import de.dwslab.alcomox.{ExtractionProblem, Settings}
 import de.unima.dws.oamatching.core._
 
 import scala.collection.JavaConversions._

@@ -1,6 +1,6 @@
 package de.unima.dws.oamatching.core
 
-import de.unima.alcomox.ontology.IOntology
+import de.dwslab.alcomox.ontology.IOntology
 
 import scala.collection.mutable
 
@@ -25,17 +25,17 @@ case class MatchingCell(entity1: String, entity2: String, measure: Double, relat
       (that canEqual this) &&
         (this.entity1.equals(that.entity1)) &&
         (this.entity2.equals(that.entity2)) &&
-        relation.equals(that.relation) &&
-        (match_type.equals(that.relation))
+       this.relation.equals(that.relation) &&
+        (this.match_type.equals(that.match_type))
     }
     case _ => {
-      true
+      false
     }
 
   }
 
   override def toString: String = {
-    "[ entity1: " + entity1.toString + " ,entity2: " + entity2.toString + " ,relation: " + relation + " ," + "sim: " + measure + " ]"
+    "[ entity1: " + entity1.toString + " ,entity2: " + entity2.toString + " ,relation: " + relation.length + " ," + "sim: " + measure + ", match_type:" +match_type+" ]"
   }
 
   override def hashCode(): Int = {

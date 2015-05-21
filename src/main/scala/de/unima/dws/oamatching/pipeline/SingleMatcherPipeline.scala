@@ -2,7 +2,7 @@ package de.unima.dws.oamatching.pipeline
 
 import java.io.File
 
-import de.unima.alcomox.ontology.IOntology
+import de.dwslab.alcomox.ontology.IOntology
 import de.unima.dws.oamatching.config.Config
 import de.unima.dws.oamatching.core.{AggregatedEvaluationResult, Alignment, EvaluationResult, EvaluationResultAggregator}
 import de.unima.dws.oamatching.matcher.MatcherRegistry
