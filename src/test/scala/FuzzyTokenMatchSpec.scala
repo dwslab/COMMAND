@@ -1,6 +1,5 @@
 import de.unima.dws.fuzzytoken.{FuzzyDiceMeasure, FuzzyCosineMeasure, FuzzyJaccardMeasure, FuzzyTokenMatch}
 import de.unima.dws.oamatching.measures.{StringMeasures, StringMeasureHelper}
-import fr.inrialpes.exmo.ontosim.string.StringDistances
 
 /**
  * Created by mueller on 21/03/15.

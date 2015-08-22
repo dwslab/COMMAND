@@ -22,5 +22,4 @@ object RunSinglePipeline extends App with LazyLogging {
   RapidminerJobs.quit()
   SparkJobs.sc.stop()
 
-
 }

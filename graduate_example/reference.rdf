@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rdf:RDF xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://knowledgeweb.semanticweb.org/heterogeneity/alignment">
+      <Alignment>
+        <xml>yes</xml>
+        <level>0</level>
+        <type>??</type>
+        <onto1>
+          <Ontology rdf:about="http://www.dwslab.de/master_alex/masters_program">
+        <location>
+          
+        </location>
+      </Ontology>
+        </onto1>
+        <onto2>
+          <Ontology rdf:about="http://www.dwslab.de/master_alex/graduate_program">
+        <location>
+          
+        </location>
+      </Ontology>
+        </onto2><map>
+        <Cell>
+          <entity1 rdf:resource="http://www.dwslab.de/master_alex/masters_program#Teacher"/>
+          <entity2 rdf:resource="http://www.dwslab.de/master_alex/graduate_program#Instructor"/>
+          <measure rdf:datatype="xsd:float">
+            1.0
+          </measure>
+           <relation>=</relation>
+        </Cell>
+      </map><map>
+        <Cell>
+          <entity1 rdf:resource="http://www.dwslab.de/master_alex/masters_program#Student"/>
+          <entity2 rdf:resource="http://www.dwslab.de/master_alex/graduate_program#Student"/>
+          <measure rdf:datatype="xsd:float">
+            1.0
+          </measure>
+          <relation>=</relation>
+        </Cell>
+      </map><map>
+        <Cell>
+          <entity1 rdf:resource="http://www.dwslab.de/master_alex/masters_program#MastersProgram"/>
+          <entity2 rdf:resource="http://www.dwslab.de/master_alex/graduate_program#GraduateProgram"/>
+          <measure rdf:datatype="xsd:float">
+            1.0
+          </measure>
+           <relation>=</relation>
+        </Cell>
+      </map><map>
+        <Cell>
+          <entity1 rdf:resource="http://www.dwslab.de/master_alex/masters_program#holds"/>
+          <entity2 rdf:resource="http://www.dwslab.de/master_alex/graduate_program#holds"/>
+          <measure rdf:datatype="xsd:float">
+            1.0
+          </measure>
+           <relation>=</relation>
+        </Cell>
+      </map><map>
+        <Cell>
+          <entity1 rdf:resource="http://www.dwslab.de/master_alex/masters_program#takes"/>
+          <entity2 rdf:resource="http://www.dwslab.de/master_alex/graduate_program#takes"/>
+          <measure rdf:datatype="xsd:float">
+            1.0
+          </measure>
+           <relation>=</relation>
+        </Cell>
+      </map>
+      </Alignment>
+    </rdf:RDF>

@@ -3,7 +3,7 @@ package de.unima.dws.oamatching.pipeline.evaluation
 import de.unima.dws.oamatching.config.Config
 import de.unima.dws.oamatching.core._
 import de.unima.dws.oamatching.pipeline._
-import de.unima.dws.oamatching.pipeline.util.{MetaDataMgmt, ResultLogger}
+import de.unima.dws.oamatching.pipeline.util.{ResultLogger}
 
 import scala.collection.immutable.Map
 

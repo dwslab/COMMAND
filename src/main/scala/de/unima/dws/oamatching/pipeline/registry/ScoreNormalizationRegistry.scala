@@ -1,9 +1,8 @@
 package de.unima.dws.oamatching.pipeline.registry
 
 import de.unima.dws.oamatching.core.MatchRelation
-import org.apache.commons.math.stat.descriptive.moment.Mean
 import org.apache.commons.math3.special.{Erf, Gamma}
-import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation
+import org.apache.commons.math3.stat.descriptive.moment.{Mean, StandardDeviation}
 
 import scala.collection.immutable.Map
 

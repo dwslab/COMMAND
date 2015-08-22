@@ -1,0 +1,3 @@
+dataset,matcher,res_type,precision,recall,f1-measure
+conference,average_core_pipleine,micro,0.7563451776649747,0.4885245901639344,0.593625498007968
+conference,average_core_pipleine,macro,0.7736377379234521,0.5304535037483618,0.6293713746399464

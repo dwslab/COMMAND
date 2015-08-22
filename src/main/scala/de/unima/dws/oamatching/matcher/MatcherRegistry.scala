@@ -10,7 +10,6 @@ import de.unima.dws.oamatching.matcher.elementlevel.{PreProcessedStringMatcher, 
 import de.unima.dws.oamatching.matcher.structurallevel._
 import de.unima.dws.oamatching.measures.{UMBCSimilarity, SemanticMeasures, StringMeasureHelper, StringMeasures}
 import fr.inrialpes.exmo.ontosim.string.StringDistances
-
 import scala.collection.mutable.{Map => MutableMap}
 
 object MatcherRegistry {
@@ -167,7 +166,6 @@ object MatcherRegistry {
    */
   def initStructuralMatcher(matcher_name: String): StructuralLevelMatcher = {
     matcher_name match {
-      case "simFloodMatcher" => new SimilarityFloodingMatcher()
       case "graphBasedUsedPropMatcher" => new GraphBasedUsedPropertyMatcher()
       case "graphBasedUsedClassMatcher" => new GraphBasedUsedClassMatcher()
       case "propertiesMatcher" => new PropertiesMatcher()

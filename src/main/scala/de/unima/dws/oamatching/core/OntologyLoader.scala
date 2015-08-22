@@ -67,8 +67,6 @@ object OntologyLoader {
     val onto_name = owlOntology.getOntologyID.getOntologyIRI.toString
 
     //get classes
-
-
     val class_name_to_iri_map: Map[String, IRI] = owlOntology.getClassesInSignature().filter(filterNotOWLThing).map(owlClass => {
       owlClass.toStringID -> owlClass.getIRI
     }).toMap
@@ -377,39 +375,39 @@ object OntologyLoader {
 
   def extractSyn(owlOntology: OWLOntology, owlEntity: OWLEntity): Option[List[String]] = {
 
-    val synonym_label = owlEntity.getAnnotations(owlOntology).map(annotation => {
-      val prop_iri = annotation.getProperty().getIRI()
-      val remainder = prop_iri.getFragment()
-
-      if (remainder.toLowerCase.contains("synonym")) {
-
-        val ni = factory.getOWLNamedIndividual(annotation.getValue.asInstanceOf[IRI]);
-
-        val synonym_label = ni.getAnnotations(owlOntology, label).map(synonym => {
-
-          if (synonym.getValue.isInstanceOf[OWLLiteral]) {
-            val element_string = synonym.getValue.asInstanceOf[OWLLiteral].getLiteral
-            Option(element_string)
-          } else {
-            Option.empty
-          }
-        }).filter(_.isDefined).map(_.get)
-
-        if (synonym_label.size > 0) {
-          if(synonym_label.size>1){
-            println("test")
-          }
-          val content = synonym_label.head
-          Option(content)
-        } else {
-          Option.empty
-        }
-
-      } else {
-        Option.empty
-      }
-    }).filter(_.isDefined).map(_.get).toList
-
+//    val synonym_label = owlEntity.getAnnotations(owlOntology).map(annotation => {
+//      val prop_iri = annotation.getProperty().getIRI()
+//      val remainder = prop_iri.getFragment()
+//
+//      if (remainder.toLowerCase.contains("synonym")) {
+//
+//        val ni = factory.getOWLNamedIndividual(annotation.getValue.asInstanceOf[IRI]);
+//
+//        val synonym_label = ni.getAnnotations(owlOntology, label).map(synonym => {
+//
+//          if (synonym.getValue.isInstanceOf[OWLLiteral]) {
+//            val element_string = synonym.getValue.asInstanceOf[OWLLiteral].getLiteral
+//            Option(element_string)
+//          } else {
+//            Option.empty
+//          }
+//        }).filter(_.isDefined).map(_.get)
+//
+//        if (synonym_label.size > 0) {
+//          if(synonym_label.size>1){
+//            println("test")
+//          }
+//          val content = synonym_label.head
+//          Option(content)
+//        } else {
+//          Option.empty
+//        }
+//
+//      } else {
+//        Option.empty
+//      }
+//    }).filter(_.isDefined).map(_.get).toList
+    val synonym_label = List()
     if (synonym_label.size > 0) {
       Option(synonym_label)
     } else {
@@ -418,15 +416,15 @@ object OntologyLoader {
   }
 
   def extractAnnotationOfType(owlOntology: OWLOntology, owlEntity: OWLEntity, annotation_type: OWLAnnotationProperty): Option[String] = {
-    val extracted = owlEntity.getAnnotations(owlOntology, annotation_type).map(annotation => {
-      if (annotation.getValue.isInstanceOf[OWLLiteral]) {
-        val element_string = annotation.getValue.asInstanceOf[OWLLiteral].getLiteral
-        Option(element_string)
-      } else {
-        Option.empty
-      }
-    })
-
+//    val extracted = owlEntity.getAnnotations(owlOntology, annotation_type).map(annotation => {
+//      if (annotation.getValue.isInstanceOf[OWLLiteral]) {
+//        val element_string = annotation.getValue.asInstanceOf[OWLLiteral].getLiteral
+//        Option(element_string)
+//      } else {
+//        Option.empty
+//      }
+//    })
+    val extracted = List()
     if (extracted.size > 0) {
       extracted.head
     } else {

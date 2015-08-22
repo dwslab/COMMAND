@@ -5,8 +5,7 @@ import java.io.File
 import _root_.de.unima.dws.oamatching.core.MatchRelation
 import com.github.tototoshi.csv.CSVReader
 import de.unima.dws.oamatching.config.Config
-import org.apache.commons.math.stat.descriptive.moment.Mean
-import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation
+import org.apache.commons.math3.stat.descriptive.moment.{Mean, StandardDeviation}
 
 import scala.Predef
 import scala.collection.immutable.{Iterable, Map}

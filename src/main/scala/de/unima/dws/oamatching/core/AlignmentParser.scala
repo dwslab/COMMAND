@@ -8,12 +8,12 @@ import com.hp.hpl.jena.rdf.model._
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl
 import com.hp.hpl.jena.util.FileManager
 import de.dwslab.alcomox.ontology.IOntology
-import org.semanticweb.owlapi.model.{OWLObject, OWLLiteral, OWLOntology}
+import org.semanticweb.owlapi.model.{OWLLiteral, OWLOntology}
 
 import scala.collection.JavaConversions._
 import scala.collection.convert.Wrappers.JIteratorWrapper
 import scala.collection.immutable
-import scala.xml.Elem
+import scala.xml._
 
 /**
  * Created by mueller on 22/01/15.
@@ -25,93 +25,71 @@ object AlignmentParser {
    * @return
    */
   def parseRDF(path_to_alignment: String): Alignment = {
-    val model: Model = ModelFactory.createDefaultModel()
-    val in: InputStream = FileManager.get().open(path_to_alignment)
 
-    if (in == null) {
-      //TODO ERROR handling
+
+    val xml = XML.loadFile(path_to_alignment)
+
+    val cells = xml \\ "Cell"
+
+    def get_entity_uri(entity: Node): String = {
+      (entity \ "@{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource").toString
     }
 
-    // read the RDF/XML file
-    model.read(in, null)
+    val correspondences = cells.map(cell => {
+      val entity1 = (cell \ "entity1")(0)
+      val entity2 = (cell \ "entity1")(0)
 
-    val namespace: String = "http://knowledgeweb.semanticweb.org/heterogeneity/alignment"
-    val alignment_node: Resource = model.createResource(namespace + "Alignment")
+      val measure = (cell \ "measure")(0).text.toString().toDouble
 
-    val iter: StmtIterator = model.listStatements(null, null, alignment_node.asInstanceOf[Resource])
-
-    if (!iter.hasNext) {
-      //TODO Error handling
-      println("fail")
-    }
-    val alignment_parent: Resource = iter.nextStatement().getSubject
-    //get onto1
-    val alignment_onto1_query = model.createProperty(namespace + "onto1")
-
-    val onto1_namespace_prop = alignment_parent.getProperty(alignment_onto1_query)
-    val onto1_namespace = if (onto1_namespace_prop.isInstanceOf[Literal]) {
-      alignment_parent.getProperty(alignment_onto1_query).getString
-    } else {
-      alignment_parent.getProperty(alignment_onto1_query).getResource.getURI.toString
-    }
-
-    //get onto2
-    val alignment_onto2_query = model.createProperty(namespace + "onto2")
-
-
-    val onto2_namespace_prop = alignment_parent.getProperty(alignment_onto2_query)
-    val onto2_namespace = if (onto1_namespace_prop.isInstanceOf[Literal]) {
-      alignment_parent.getProperty(alignment_onto2_query).getString
-    } else {
-      alignment_parent.getProperty(alignment_onto2_query).getResource.getURI.toString
-    }
-
-    val alignment_cell_query = model.createProperty(namespace + "map")
-    //wrap and map to RDFResource
-    val alignment_cells: List[RDFNode] = JIteratorWrapper(alignment_parent.listProperties(alignment_cell_query)).toList.map(cell => cell.getObject)
-
-
-    //map to cells
-    val correspondences = alignment_cells.map(cell => {
-      if (cell.isResource) {
-        val cell_casted = cell.asInstanceOf[ResourceImpl]
-        val relation_uncleaned: String = cell_casted.getProperty(model.createProperty(namespace + "relation")).getString.trim
-        val relation:String =  relation_uncleaned.replaceAll("\\s","")
-
-        val measure: Double = cell_casted.getProperty(model.createProperty(namespace + "measure")).getLiteral.getLexicalForm.toDouble
-
-        val entity1: URI = new URI(cell_casted.getProperty(model.createProperty(namespace + "entity1")).getResource.getURI)
-        val entity2: URI = new URI(cell_casted.getProperty(model.createProperty(namespace + "entity2")).getResource.getURI)
-
-        Option(MatchingCell(entity1.toString, entity2.toString, measure, relation, Cell.TYPE_UNKOWN, Alignment.TYPE_NONE))
-
-
-      } else {
-        //means that in the alignment is an empty mapping in the form
-        // <map>
-        //
-        // </map>
-        // so ignore it
-        Option.empty
-      }
+      val relation = (cell \ "relation")(0).text.toString().replaceAll("\\s", "")
+      MatchingCell(get_entity_uri(entity1), get_entity_uri(entity2), 0.0, relation, Cell.TYPE_UNKOWN, Alignment.TYPE_NONE)
     }).toList
 
+    val ont1_namespace_nodes = xml \\ "onto1"
 
-    val cleaned_correspondences = correspondences.filter(_.isDefined).map(_.get)
+    val ont1_namespace = extract_onto_name_space(ont1_namespace_nodes)
 
-    new Alignment(onto1_namespace, onto2_namespace, cleaned_correspondences)
+    val ont2_namespace_nodes = xml \\ "onto2"
+
+    val ont2_namespace = extract_onto_name_space(ont2_namespace_nodes)
+
+
+    new Alignment(ont1_namespace.getOrElse("onto1"), ont2_namespace.getOrElse("onto2"), correspondences)
+  }
+
+  def get_entity_uri(entity: Node): String = {
+    (entity \ "@{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource").toString
+  }
+
+  def isTextNode(node: Node): Boolean = {
+    val filtered = node.child.filter { childNode => !childNode.isInstanceOf[Text] }
+
+    filtered.isEmpty
+  }
+
+  def extract_onto_name_space(node_name_space: NodeSeq): Option[String] = {
+    if (node_name_space.size > 0) {
+      try {
+        val tmp_ont_node = node_name_space(0)
+        val onto_namespace = if (isTextNode(tmp_ont_node)) {
+          tmp_ont_node.text.toString
+        } else {
+          (tmp_ont_node(0) \ "Ontology" \ "@{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about")(0).toString()
+        }
+        Option(onto_namespace)
+      } catch {
+        case e: Exception => Option.empty
+      }
+
+    } else {
+      Option.empty
+    }
   }
 
 
   def parseRDFWithOntos(path_to_alignment: String, onto1: OWLOntology, onto2: OWLOntology): Alignment = {
 
-    val model: Model = ModelFactory.createDefaultModel()
 
-    val in: InputStream = FileManager.get().open(path_to_alignment)
-
-    if (in == null) {
-      //TODO ERROR handling
-    }
     val onto1_obj_properties: Vector[String] = onto1.getObjectPropertiesInSignature().toVector.map(property => property.getIRI.toString).toVector
     val onto2_obj_properties: Vector[String] = onto2.getObjectPropertiesInSignature().toVector.map(property => property.getIRI.toString).toVector
 
@@ -122,97 +100,31 @@ object AlignmentParser {
     val onto2_classes: Vector[String] = onto2.getClassesInSignature().map(o_class => o_class.getIRI.toString).toVector
 
 
-    // read the RDF/XML file
-    model.read(in, null)
+    val simple_alignment = parseRDF(path_to_alignment)
 
 
-    val namespace: String = "http://knowledgeweb.semanticweb.org/heterogeneity/alignment"
-    val alignment_node: Resource = model.createResource(namespace + "Alignment")
+    val correspondences = simple_alignment.correspondences.map(cell => {
+      val entity1= cell.entity1
+      val entity2= cell.entity2
 
-    val iter: StmtIterator = model.listStatements(null, null, alignment_node.asInstanceOf[Resource])
-
-    if (!iter.hasNext) {
-      //TODO Error handling
-      println("fail")
-    }
-    val alignment_parent: Resource = iter.nextStatement().getSubject
-
-
-    val alignment_onto1_uri_query = model.createProperty(namespace + "uri1")
-    val onto1_uri: String = getOntoProperty(alignment_parent, alignment_onto1_uri_query)
-
-    //get onto1
-    val alignment_onto1_query = model.createProperty(namespace + "onto1")
-    val onto1_namespace: String = if (onto1_uri.equals("nn")) {
-      getOntoProperty(alignment_parent, alignment_onto1_query)
-    } else {
-      onto1_uri
-    }
-
-
-    val alignment_onto2_uri_query = model.createProperty(namespace + "uri2")
-    val onto2_uri: String = getOntoProperty(alignment_parent, alignment_onto2_uri_query)
-
-    //get onto2
-    val alignment_onto2_query = model.createProperty(namespace + "onto2")
-    val onto2_namespace: String = if (onto2_uri.equals("nn")) {
-      getOntoProperty(alignment_parent, alignment_onto2_query)
-    } else {
-      onto2_uri
-    }
-
-    val alignment_cell_query = model.createProperty(namespace + "map")
-    //wrap and map to RDFResource
-    val alignment_cells: List[RDFNode] = JIteratorWrapper(alignment_parent.listProperties(alignment_cell_query)).toList.map(cell => cell.getObject)
-
-
-
-
-    val correspondences = alignment_cells.map(cell => {
-      if (cell.isResource) {
-        val cell_casted = cell.asInstanceOf[ResourceImpl]
-
-
-        val relation_uncleaned: String = cell_casted.getProperty(model.createProperty(namespace + "relation")).getString.trim
-        val relation:String =  relation_uncleaned.replaceAll("\\s","")
-
-        val measure: Double = cell_casted.getProperty(model.createProperty(namespace + "measure")).getLiteral.getLexicalForm.toDouble
-
-        val entity1: URI = new URI(cell_casted.getProperty(model.createProperty(namespace + "entity1")).getResource.getURI)
-        val entity2: URI = new URI(cell_casted.getProperty(model.createProperty(namespace + "entity2")).getResource.getURI)
-
-        // add type of relation with ontos
-        val cell_type = if (onto1_classes.contains(entity1.toString) && onto2_classes.contains(entity2.toString)) {
-          Cell.TYPE_CLASS
-        } else if (onto1_obj_properties.contains(entity1.toString) && onto2_obj_properties.contains(entity2.toString)) {
-          Cell.TYPE_OBJECT_PROPERTY
-        } else if (onto1_data_properties.contains(entity1.toString) && onto2_data_properties.contains(entity2.toString)) {
-          Cell.TYPE_DT_PROPERTY
-        } else {
-          // individuals
-
-          Cell.TYPE_UNKOWN
-        }
-
-        Option(MatchingCell(entity1.toString, entity2.toString, measure, "=", cell_type, Alignment.TYPE_NONE))
+      val cell_type = if (onto1_classes.contains(entity1.toString) && onto2_classes.contains(entity2.toString)) {
+        Cell.TYPE_CLASS
+      } else if (onto1_obj_properties.contains(entity1.toString) && onto2_obj_properties.contains(entity2.toString)) {
+        Cell.TYPE_OBJECT_PROPERTY
+      } else if (onto1_data_properties.contains(entity1.toString) && onto2_data_properties.contains(entity2.toString)) {
+        Cell.TYPE_DT_PROPERTY
       } else {
-        //means that in the alignment is an empty mapping in the form
-        // <map>
-        //
-        // </map>
-        // so ignore it
-        Option.empty
+        // individuals
+        Cell.TYPE_UNKOWN
       }
+
+      MatchingCell(entity1.toString, entity2.toString, cell.measure, cell.relation.trim().replaceAll("\\s", ""), cell_type, Alignment.TYPE_NONE)
     }).toList
-
-
-    val cleaned_correspondences = correspondences.filter(_.isDefined).map(_.get)
-
 
     val i_onto1 = new IOntology(onto1)
     val i_onto2 = new IOntology(onto2)
 
-    new Alignment(onto1_namespace, onto2_namespace, null, null, i_onto1, i_onto2, cleaned_correspondences)
+    new Alignment(simple_alignment.onto1, simple_alignment.onto2, null, null, i_onto1, i_onto2, correspondences)
   }
 
   /**
@@ -236,23 +148,23 @@ object AlignmentParser {
 
     val result = alignment_parent.listProperties(alignment_onto2_query).toList
 
-    val onto2_namespace =if(result.size() > 0){
+    val onto2_namespace = if (result.size() > 0) {
 
 
-        if(result.head.isInstanceOf[OWLLiteral]) {
-          result.head.getLiteral.toString
-        }else {
-         if(result.head.getObject.isResource) {
-           result.head.getObject().asResource().toString
-         }else {
-           ""
-         }
+      if (result.head.isInstanceOf[OWLLiteral]) {
+        result.head.getLiteral.toString
+      } else {
+        if (result.head.getObject.isResource) {
+          result.head.getObject().asResource().toString
+        } else {
+          ""
         }
-
-
-      }else {
-        "nn"
       }
+
+
+    } else {
+      "nn"
+    }
 
     onto2_namespace
   }
@@ -274,8 +186,12 @@ object AlignmentParser {
         <Cell>
           <entity1 rdf:resource={entity1}/>
           <entity2 rdf:resource={entity2}/>
-          <measure rdf:datatype='xsd:float'>{measure}</measure>
-          <relation>{relation}</relation>
+          <measure rdf:datatype='xsd:float'>
+            {measure}
+          </measure>
+          <relation>
+            {relation}
+          </relation>
         </Cell>
       </map>
     }
@@ -327,7 +243,7 @@ object AlignmentParser {
 
   def writeFalseNegativesAnalysis(alignment: Alignment, reference: Alignment, name: String, selected_matchings: Map[MatchRelation, Double], raw_matchings: Map[MatchRelation, Double], threshold: Double): Unit = {
     val testFile = new PrintWriter("tmp/falsenegatives" + File.separator + name + "fn_log.txt", "UTF-8")
-    val falseNegatives =alignment.getFalseNegatives(reference)
+    val falseNegatives = alignment.getFalseNegatives(reference)
 
     //get best result for false negative
     val best_false_negative_result: Map[MatchingCell, (MatchRelation, Double)] = falseNegatives.map(elem => {
@@ -354,7 +270,7 @@ object AlignmentParser {
 
         testFile.println("##############################")
         testFile.println("Analyse fn " + false_negative_cell)
-        testFile.println(s"Is in Alignment? " + alignment.containsCorrespondence(false_negative_cell.entity1,false_negative_cell.entity2))
+        testFile.println(s"Is in Alignment? " + alignment.containsCorrespondence(false_negative_cell.entity1, false_negative_cell.entity2))
         testFile.println(s"Best false negative result $negative_result")
 
         rights.foreach(right_elem => {
@@ -384,7 +300,7 @@ object AlignmentParser {
 
     val csv_file = new File("tmp/falsenegatives" + File.separator + name + "_fn.csv")
 
-   // println(csv_file.getAbsolutePath)
+    // println(csv_file.getAbsolutePath)
     if (!csv_file.exists()) {
       csv_file.createNewFile()
     }
@@ -405,7 +321,7 @@ object AlignmentParser {
   }
 
   def writeFalsePositivesToCSV(alignment: Alignment, reference: Alignment, name: String): Unit = {
-    val falsePositives =    alignment.getFalsePositives(reference)
+    val falsePositives = alignment.getFalsePositives(reference)
 
     val csv_file = new File("tmp/falsenegatives" + File.separator + name + "_fp.csv")
 

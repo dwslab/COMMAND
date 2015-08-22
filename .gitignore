@@ -5,3 +5,5 @@ target/
 project/
 *.lexicon
 models/
+alignments/
+tmp/
