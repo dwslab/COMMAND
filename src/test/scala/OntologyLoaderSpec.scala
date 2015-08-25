@@ -25,23 +25,6 @@ class OntologyLoaderSpec extends  UnitSpec{
 
   }
 
-  it should "parse sub class relationships correctly " in {
-    val human_onto = OntologyLoader.load_fast_ontology("ontos/2014/anatomy/human.owl")
-
-    val oral_cavity = IRI.create("http://human.owl#NCI_C12421")
-
-    //get super class
-    val parents_of_oral_cavity = human_onto.child_to_parents_classes_map.get(oral_cavity)
-
-    val cavity = IRI.create("http://human.owl#NCI_C25444")
-
-    println(human_onto.classes_to_names.get(oral_cavity).get.label.get)
-    println(parents_of_oral_cavity.get.toList)
-
-    assert(parents_of_oral_cavity.get.contains(cavity))
-    assert(parents_of_oral_cavity.get.size > 0)
-  }
-
   it should "make sure that the leaf node in the class hierachy have no children " in {
     val human_onto = OntologyLoader.load_fast_ontology("ontos/2014/anatomy/human.owl")
 
@@ -59,15 +42,7 @@ class OntologyLoaderSpec extends  UnitSpec{
     assert(children.get.size==4)
   }
 
-  it should "parse the label of an object property correctly " in {
-    val human_onto = OntologyLoader.load_fast_ontology("ontos/2014/anatomy/human.owl")
-
-    val object_prop = IRI.create("http://human.owl#UNDEFINED_part_of")
-    val label = human_onto.object_properties_to_names.get(object_prop).get.label.get
-    assert(label.equals("part of"))
-  }
-
-  it should "parse the synonyms of a class correctly " in {
+  /*it should "parse the synonyms of a class correctly " in {
 
     val human_onto = OntologyLoader.load_fast_ontology("ontos/2014/anatomy/human.owl")
 
@@ -76,7 +51,7 @@ class OntologyLoaderSpec extends  UnitSpec{
     assert(synonyms.isDefined)
     println(synonyms.get)
     assert(synonyms.get.size == 2)
-  }
+  }*/
 
   it should "enable random access to IRI, by their iri string" in {
     val human_onto = OntologyLoader.load_fast_ontology("ontos/2014/anatomy/human.owl")

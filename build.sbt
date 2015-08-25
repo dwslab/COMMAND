@@ -1,26 +1,20 @@
 import sbt.ExclusionRule
 
-name := "ontologymatcher"
+name := "command"
 
 version := "1.0"
 
 scalaVersion := "2.10.4"
+// Automatically find def main(args:Array[String]) methods from classpath
+packAutoSettings
 
 conflictManager := sbt.ConflictManager.latestRevision
 
 libraryDependencies += "org.apache.spark" %% "spark-core" % "1.2.1" excludeAll(
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "org.apache.commons"),
-  ExclusionRule(organization = "org.scala-lang"),
-  ExclusionRule(organization = "xml-apis")
+  ExclusionRule(organization = "org.slf4j")
   )
 
 libraryDependencies += "org.apache.spark" %% "spark-mllib" % "1.2.1" excludeAll (
-  ExclusionRule(organization = "org.slf4j"),
-  ExclusionRule(organization = "xml-apis")
-  )
-
-libraryDependencies += "org.apache.jena" % "jena-core" % "3.0.0" excludeAll (
   ExclusionRule(organization = "org.slf4j")
   )
 
@@ -97,15 +91,16 @@ libraryDependencies += "de.dwslab" % "Alcomo" % "1.01" excludeAll(
   ExclusionRule(organization = "org.slf4j"),
   ExclusionRule(organization = "net.sourceforge.owlapi"),
   ExclusionRule(organization = "com.github.ansell.owlapi"),
-  ExclusionRule(organization = "xerces"),
-  ExclusionRule(organization = "org.apache.xerces"),
-  ExclusionRule(organization = "xml-apis")
+  ExclusionRule(organization = "xerces")
   )
 
+libraryDependencies += "org.jsoup" % "jsoup" % "1.8.3"
 
 libraryDependencies += "org.openrdf.sesame" % "sesame-rio" % "2.8.5"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+
+libraryDependencies += "org.json4s" %% "json4s-native" % "3.2.11"
 
 resolvers += "Local Maven Repository" at "file:///Users/mueller/.m2/repository/"
 

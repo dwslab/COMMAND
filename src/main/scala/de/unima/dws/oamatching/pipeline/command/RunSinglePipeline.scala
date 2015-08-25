@@ -2,6 +2,7 @@ package de.unima.dws.oamatching.pipeline.command
 
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import de.unima.dws.oamatching.analysis.{SparkJobs, RapidminerJobs}
+import de.unima.dws.oamatching.measures.SynonymFinder
 import de.unima.dws.oamatching.pipeline.CommandRun
 
 /**
@@ -17,9 +18,13 @@ object RunSinglePipeline extends App with LazyLogging {
     logger.info("Result: " + eval_result.get.toString)
   }
   logger.info("Alignment was written to file:" + " alignments/" + config.matchingProblem.name + ".rdf")
-
+  SynonymFinder.save_to_json()
 
   RapidminerJobs.quit()
   SparkJobs.sc.stop()
 
+
 }
+
+
+

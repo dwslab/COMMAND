@@ -13,8 +13,9 @@ import scala.collection.JavaConversions._
  * Created by mueller on 21/01/15.
  */
 
-case class EntitiesOntology(val classes:Vector[IRI], val object_properties:Vector[IRI], val data_properties:Vector[IRI])
-case class FastOntology(val base_values:EntitiesOntology,
+case class EntitiesOntology(val classes: Vector[IRI], val object_properties: Vector[IRI], val data_properties: Vector[IRI])
+
+case class FastOntology(val base_values: EntitiesOntology,
                         val parent_to_child_classes_map: Map[IRI, Set[IRI]],
                         val child_to_parents_classes_map: Map[IRI, Set[IRI]],
                         val parent_to_child_object_properties_map: Map[IRI, Set[IRI]],
@@ -31,11 +32,11 @@ case class FastOntology(val base_values:EntitiesOntology,
                         val classes_to_names: Map[IRI, ExtractedFields],
                         val object_properties_to_names: Map[IRI, ExtractedFields],
                         val data_properties_to_names: Map[IRI, ExtractedFields],
-                        val class_name_to_IRI:Map[String,IRI],
-                        val object_property_name_to_IRI:Map[String,IRI],
-                        val data_property_name_to_IRI:Map[String,IRI],
-                        val name:String,
-                         val path:String)
+                        val class_name_to_IRI: Map[String, IRI],
+                        val object_property_name_to_IRI: Map[String, IRI],
+                        val data_property_name_to_IRI: Map[String, IRI],
+                        val name: String,
+                        val path: String)
 
 object OntologyLoader {
   val manager: OWLOntologyManager = OWLManager.createOWLOntologyManager()
@@ -64,7 +65,7 @@ object OntologyLoader {
     val owlOntology = manager.loadOntology(onto_iri)
 
 
-    val onto_name = owlOntology.getOntologyID.getOntologyIRI.toString
+    val onto_name = owlOntology.getOntologyID.getOntologyIRI.get().toString
 
     //get classes
     val class_name_to_iri_map: Map[String, IRI] = owlOntology.getClassesInSignature().filter(filterNotOWLThing).map(owlClass => {
@@ -305,7 +306,7 @@ object OntologyLoader {
 
       //if comment is not defined use synonyms
 
-      owlClass.getIRI -> ExtractedFields(Option.empty,Option.empty,local_name, e_label, e_comment, syn)
+      owlClass.getIRI -> ExtractedFields(Option.empty, Option.empty, local_name, e_label, e_comment, syn)
     }).toMap
     /*#################################################################################################################
                                              Extract Fields for Properties
@@ -318,13 +319,13 @@ object OntologyLoader {
       val e_comment = extractAnnotationOfType(owlOntology, owlProp, comment)
       val syn = extractSyn(owlOntology, owlProp)
       val domain = object_prop_domain.get(owlProp.getIRI())
-      val domain_labels: Option[Set[String]] = extractDomainRangeLabels(domain,owlClassToNames)
+      val domain_labels: Option[Set[String]] = extractDomainRangeLabels(domain, owlClassToNames)
 
       val range = object_prop_range.get(owlProp.getIRI())
-      val range_labels: Option[Set[String]] = extractDomainRangeLabels(range,owlClassToNames)
+      val range_labels: Option[Set[String]] = extractDomainRangeLabels(range, owlClassToNames)
 
 
-      owlProp.getIRI -> ExtractedFields(domain_labels,range_labels,local_name, e_label, e_comment, syn)
+      owlProp.getIRI -> ExtractedFields(domain_labels, range_labels, local_name, e_label, e_comment, syn)
     }).toMap
 
 
@@ -338,15 +339,15 @@ object OntologyLoader {
 
       val domain = data_prop_domain.get(owlProp.getIRI())
 
-      val domain_labels: Option[Set[String]] = extractDomainRangeLabels(domain,owlClassToNames)
+      val domain_labels: Option[Set[String]] = extractDomainRangeLabels(domain, owlClassToNames)
 
 
-      owlProp.getIRI -> ExtractedFields(domain_labels,Option.empty,local_name, e_label, e_comment, syn)
+      owlProp.getIRI -> ExtractedFields(domain_labels, Option.empty, local_name, e_label, e_comment, syn)
     }).toMap
 
     manager.removeOntology(owlOntology)
-    val base_values = EntitiesOntology(classes,object_properties,data_properties)
-    FastOntology(base_values, parent_to_child_classes, child_to_parent_classes, parent_to_child_object_props, child_to_parent_object_props, parent_to_child_data_props, child_to_parent_data_props, object_prop_domain, object_prop_range, data_prop_domain, data_prop_range, class_object_prop_domain, class_object_prop_range, class_data_prop, owlClassToNames, owlObjectPropertiesToNames, owlDataPropertiesToNames, class_name_to_iri_map, object_property_name_to_iri_map, data_proptery_name_to_iri_map,onto_name,onto)
+    val base_values = EntitiesOntology(classes, object_properties, data_properties)
+    FastOntology(base_values, parent_to_child_classes, child_to_parent_classes, parent_to_child_object_props, child_to_parent_object_props, parent_to_child_data_props, child_to_parent_data_props, object_prop_domain, object_prop_range, data_prop_domain, data_prop_range, class_object_prop_domain, class_object_prop_range, class_data_prop, owlClassToNames, owlObjectPropertiesToNames, owlDataPropertiesToNames, class_name_to_iri_map, object_property_name_to_iri_map, data_proptery_name_to_iri_map, onto_name, onto)
   }
 
 
@@ -375,38 +376,38 @@ object OntologyLoader {
 
   def extractSyn(owlOntology: OWLOntology, owlEntity: OWLEntity): Option[List[String]] = {
 
-//    val synonym_label = owlEntity.getAnnotations(owlOntology).map(annotation => {
-//      val prop_iri = annotation.getProperty().getIRI()
-//      val remainder = prop_iri.getFragment()
-//
-//      if (remainder.toLowerCase.contains("synonym")) {
-//
-//        val ni = factory.getOWLNamedIndividual(annotation.getValue.asInstanceOf[IRI]);
-//
-//        val synonym_label = ni.getAnnotations(owlOntology, label).map(synonym => {
-//
-//          if (synonym.getValue.isInstanceOf[OWLLiteral]) {
-//            val element_string = synonym.getValue.asInstanceOf[OWLLiteral].getLiteral
-//            Option(element_string)
-//          } else {
-//            Option.empty
-//          }
-//        }).filter(_.isDefined).map(_.get)
-//
-//        if (synonym_label.size > 0) {
-//          if(synonym_label.size>1){
-//            println("test")
-//          }
-//          val content = synonym_label.head
-//          Option(content)
-//        } else {
-//          Option.empty
-//        }
-//
-//      } else {
-//        Option.empty
-//      }
-//    }).filter(_.isDefined).map(_.get).toList
+    //    val synonym_label = owlEntity.getAnnotations(owlOntology).map(annotation => {
+    //      val prop_iri = annotation.getProperty().getIRI()
+    //      val remainder = prop_iri.getFragment()
+    //
+    //      if (remainder.toLowerCase.contains("synonym")) {
+    //
+    //        val ni = factory.getOWLNamedIndividual(annotation.getValue.asInstanceOf[IRI]);
+    //
+    //        val synonym_label = ni.getAnnotations(owlOntology, label).map(synonym => {
+    //
+    //          if (synonym.getValue.isInstanceOf[OWLLiteral]) {
+    //            val element_string = synonym.getValue.asInstanceOf[OWLLiteral].getLiteral
+    //            Option(element_string)
+    //          } else {
+    //            Option.empty
+    //          }
+    //        }).filter(_.isDefined).map(_.get)
+    //
+    //        if (synonym_label.size > 0) {
+    //          if(synonym_label.size>1){
+    //            println("test")
+    //          }
+    //          val content = synonym_label.head
+    //          Option(content)
+    //        } else {
+    //          Option.empty
+    //        }
+    //
+    //      } else {
+    //        Option.empty
+    //      }
+    //    }).filter(_.isDefined).map(_.get).toList
     val synonym_label = List()
     if (synonym_label.size > 0) {
       Option(synonym_label)
@@ -416,14 +417,14 @@ object OntologyLoader {
   }
 
   def extractAnnotationOfType(owlOntology: OWLOntology, owlEntity: OWLEntity, annotation_type: OWLAnnotationProperty): Option[String] = {
-//    val extracted = owlEntity.getAnnotations(owlOntology, annotation_type).map(annotation => {
-//      if (annotation.getValue.isInstanceOf[OWLLiteral]) {
-//        val element_string = annotation.getValue.asInstanceOf[OWLLiteral].getLiteral
-//        Option(element_string)
-//      } else {
-//        Option.empty
-//      }
-//    })
+    //    val extracted = owlEntity.getAnnotations(owlOntology, annotation_type).map(annotation => {
+    //      if (annotation.getValue.isInstanceOf[OWLLiteral]) {
+    //        val element_string = annotation.getValue.asInstanceOf[OWLLiteral].getLiteral
+    //        Option(element_string)
+    //      } else {
+    //        Option.empty
+    //      }
+    //    })
     val extracted = List()
     if (extracted.size > 0) {
       extracted.head
@@ -434,8 +435,17 @@ object OntologyLoader {
 
   }
 
-  def filterNotOWLThing(elem:OWLEntity):Boolean = {
+  def filterNotOWLThing(elem: OWLEntity): Boolean = {
     val iri_String = elem.getIRI.toString
-    !(iri_String.isEmpty || iri_String.endsWith("owl#Thing") ||  iri_String.endsWith("owl:Thing"))
+    !(iri_String.isEmpty || iri_String.endsWith("owl#Thing") || iri_String.endsWith("owl:Thing"))
+  }
+
+  def updateBaseEntities(fastOntology: FastOntology, base_values: EntitiesOntology): FastOntology = {
+
+    FastOntology(base_values, fastOntology.parent_to_child_classes_map, fastOntology.child_to_parents_classes_map, fastOntology.parent_to_child_object_properties_map, fastOntology.child_to_parents_object_propterties_map, fastOntology.parent_to_child_object_properties_map, fastOntology.child_to_parents_data_propterties_map, fastOntology.object_property_to_domain_map,
+      fastOntology.object_property_to_range_map, fastOntology.data_property_to_domain_map, fastOntology.data_property_to_range_map, fastOntology.classes_in_object_prop_domain, fastOntology.classes_in_object_prop_range, fastOntology.classes_in_data_prop_domain,
+      fastOntology.classes_to_names, fastOntology.object_properties_to_names, fastOntology.data_properties_to_names, fastOntology.class_name_to_IRI, fastOntology.object_property_name_to_IRI, fastOntology.data_property_name_to_IRI,
+      fastOntology.name, fastOntology.path)
+
   }
 }

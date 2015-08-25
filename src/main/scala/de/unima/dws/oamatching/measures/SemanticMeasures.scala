@@ -2,10 +2,11 @@ package de.unima.dws.oamatching.measures
 
 
 import com.typesafe.scalalogging.slf4j.LazyLogging
-import de.unima.dws.alex.simservice.{Config => Sim_Service_Config, SimService}
+import de.unima.dws.alex.simservice.{Config => Sim_Service_Config}
 import de.unima.dws.oamatching.analysis.SparkJobs
 import de.unima.dws.oamatching.config.Config
 import org.apache.spark.mllib.feature.Word2VecModel
+import org.jsoup.Jsoup
 import play.api.libs.json._
 
 import scalaj.http.{Http, HttpResponse}
@@ -38,11 +39,10 @@ object SemanticMeasures extends LazyLogging {
   }
 
 
-  def isUMLSSynonym(phrase1:String, phrase2:String):Double = {
-    UMLSSynonymFinder.isSynonym(phrase1,phrase2)
+  def isUMLSSynonym(phrase1: String, phrase2: String): Double = {
+    UMLSSynonymFinder.isSynonym(phrase1, phrase2)
 
   }
-
 
 
   /**
@@ -135,4 +135,57 @@ object SemanticMeasures extends LazyLogging {
       }
     }
   }
+
+
+  def getSynonymBigHugeThesaurus(term: String): Seq[String] = {
+    try {
+      val response: HttpResponse[String] = Http(Config.BIG_HUGE_THESAURUS_SERVICE_URL + "/" + term + "/json").asString
+
+      if (!response.is2xx) {
+        Seq()
+      } else {
+        val json_parse = response.body.toString
+        val result_json: JsValue = Json.parse(json_parse)
+
+        //get all synonyms
+        val syn_sets: Seq[JsValue] = result_json \\ "syn"
+
+        val syn_terms = syn_sets.map(syn_set => {
+          val syn_set_arr = syn_set.asInstanceOf[JsArray]
+          for (syn_word <- syn_set_arr.value) yield {
+            syn_word.asInstanceOf[JsString].as[String]
+          }
+        }).flatten.toSeq
+        syn_terms
+      }
+    }catch{
+      case e: Exception=> Seq()
+    }
+  }
+
+
+  def getTopNWordsHacky(term: String, pos:String):Seq[String] = {
+      print("get")
+    try{
+      val response = Http("http://semanticwebarchive.cs.umbc.edu/SimService/GetSimilarity").postForm(List(("operation", "top_sim"),
+        ("word", term),
+        ("pos", pos), ("N", "100"),
+        ("sim_type", "concept"), ("corpus", "webbase"),
+        ("query", "Get Top-N Most Similar Words"))).asString
+      if (!response.is2xx) {
+        Seq()
+      } else {
+        val doc = Jsoup.parse(response.body)
+        val elements = doc.select("textarea")
+        val parsed_html = elements.html()
+        val synonyms = parsed_html.split(",").map(splitted_string => splitted_string.split("_")(0).trim()).toList
+        synonyms.toSeq
+      }
+    }catch{
+      case e: Exception=> Seq()
+    }
+
+  }
+
+
 }

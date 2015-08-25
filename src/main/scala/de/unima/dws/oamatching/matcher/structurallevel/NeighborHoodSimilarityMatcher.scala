@@ -26,7 +26,7 @@ class NeighborHoodSimilarityMatcher(val strategy: Int) extends StructuralLevelMa
       }).toList.flatten.groupBy(identity)
 
 
-      val min_value = cells_to_add.map { case (x, ys) => ys.minBy(_.measure)}
+      val min_value = cells_to_add.map { case (x, ys) => ys.minBy(_.measure) }
 
       min_value.toSet
 
@@ -45,41 +45,45 @@ class NeighborHoodSimilarityMatcher(val strategy: Int) extends StructuralLevelMa
     //super classes
     val sub_entities_onto1 = getDirectChildren(cell.owl_type, cell.entity1, onto1)
     val sub_entities_onto2 = getDirectChildren(cell.owl_type, cell.entity2, onto2)
-
-    val matching_from_sub_classes: Set[MatchingCell] = for (entity1 <- sub_entities_onto1.get;
-                                                            entity2 <- sub_entities_onto2.get;
-                                                            candidate = matchNeighborHood(entity1, entity2, alignment, cell.owl_type, onto1, onto2, match_type, threshold);
-                                                            if (candidate.isDefined)) yield {
-      candidate.get
-    }
-
-    //super classes
     val super_entities_onto1 = getDirectParents(cell.owl_type, cell.entity1, onto1)
     val super_entities_onto2 = getDirectParents(cell.owl_type, cell.entity2, onto2)
-
-    val matching_from_super_classes: Set[MatchingCell] = for (entity1 <- super_entities_onto1.get;
-                                                              entity2 <- super_entities_onto2.get;
-                                                              candidate = matchNeighborHood(entity1, entity2, alignment, cell.owl_type, onto1, onto2, match_type, threshold)
+    if (sub_entities_onto1.isDefined && sub_entities_onto2.isDefined && super_entities_onto1.isDefined && sub_entities_onto2.isDefined) {
+      val matching_from_sub_classes: Set[MatchingCell] = for (entity1 <- sub_entities_onto1.get;
+                                                              entity2 <- sub_entities_onto2.get;
+                                                              candidate = matchNeighborHood(entity1, entity2, alignment, cell.owl_type, onto1, onto2, match_type, threshold);
                                                               if (candidate.isDefined)) yield {
-      candidate.get
-    }
-
-    //resolve potentially double matched cells
-    val intersected_sections: Set[MatchingCell] = for (cell_e1 <- matching_from_sub_classes;
-                                                       cell_e2 <- matching_from_super_classes; if (cell_e1.equals(cell_e2))) yield {
-      val measure = if (strategy.equals(NeighborHoodSimilarityMatcher.STRATEGY_MIN)) {
-        Math.max(cell_e1.measure, cell_e2.measure)
-      } else if (strategy.equals(NeighborHoodSimilarityMatcher.STRATEGY_MAX)) {
-        Math.min(cell_e1.measure, cell_e2.measure)
-      } else {
-        (cell_e1.measure + cell_e2.measure) / 2
+        candidate.get
       }
-      MatchingCell(cell_e1.entity1, cell_e1.entity2, measure, cell_e1.relation, cell_e1.owl_type, cell_e1.match_type)
+
+      //super classes
+
+
+      val matching_from_super_classes: Set[MatchingCell] = for (entity1 <- super_entities_onto1.get;
+                                                                entity2 <- super_entities_onto2.get;
+                                                                candidate = matchNeighborHood(entity1, entity2, alignment, cell.owl_type, onto1, onto2, match_type, threshold)
+                                                                if (candidate.isDefined)) yield {
+        candidate.get
+      }
+
+      //resolve potentially double matched cells
+      val intersected_sections: Set[MatchingCell] = for (cell_e1 <- matching_from_sub_classes;
+                                                         cell_e2 <- matching_from_super_classes; if (cell_e1.equals(cell_e2))) yield {
+        val measure = if (strategy.equals(NeighborHoodSimilarityMatcher.STRATEGY_MIN)) {
+          Math.max(cell_e1.measure, cell_e2.measure)
+        } else if (strategy.equals(NeighborHoodSimilarityMatcher.STRATEGY_MAX)) {
+          Math.min(cell_e1.measure, cell_e2.measure)
+        } else {
+          (cell_e1.measure + cell_e2.measure) / 2
+        }
+        MatchingCell(cell_e1.entity1, cell_e1.entity2, measure, cell_e1.relation, cell_e1.owl_type, cell_e1.match_type)
+      }
+
+      val resulting_matchings = matching_from_sub_classes ++ matching_from_super_classes ++ intersected_sections
+
+      resulting_matchings
+    } else {
+      Set()
     }
-
-    val resulting_matchings = matching_from_sub_classes ++ matching_from_super_classes ++ intersected_sections
-
-    resulting_matchings
   }
 
   /**
@@ -259,7 +263,7 @@ class NeighborHoodSimilarityMatcher(val strategy: Int) extends StructuralLevelMa
         Option(Map(parent -> start_depth))
       }
 
-    }else if(children.size == 1 && children.head.equals(parent)){
+    } else if (children.size == 1 && children.head.equals(parent)) {
       Option.empty
     } else {
 
@@ -290,10 +294,10 @@ class NeighborHoodSimilarityMatcher(val strategy: Int) extends StructuralLevelMa
       } else {
         Option(Map(child -> start_depth))
       }
-    //avoid cyclical effects
-    } else if(parents.size == 1 && parents.head.equals(child)){
+      //avoid cyclical effects
+    } else if (parents.size == 1 && parents.head.equals(child)) {
       Option.empty
-    }else {
+    } else {
       try {
         val new_elems = parents.map(new_parent => {
           getParents(new_parent, start_depth + 1, parents_map)

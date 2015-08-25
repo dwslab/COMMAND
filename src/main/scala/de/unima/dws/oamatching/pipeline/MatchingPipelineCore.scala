@@ -4,15 +4,20 @@ import java.io.File
 
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import de.dwslab.alcomox.ontology.IOntology
-import de.unima.dws.oamatching.analysis.{SeparatedResults, SparkJobs}
+import de.unima.dws.oamatching.analysis.SeparatedResults
 import de.unima.dws.oamatching.config.Config
-import de.unima.dws.oamatching.core.matcher.{Matcher, StructuralLevelMatcher}
-import de.unima.dws.oamatching.core.{Alignment, FastOntology, MatchRelation}
+import de.unima.dws.oamatching.core.matcher.{ExtractedFields, Matcher, StructuralLevelMatcher}
+import de.unima.dws.oamatching.core._
 import de.unima.dws.oamatching.matcher.MatcherRegistry
+import de.unima.dws.oamatching.measures.{StringMeasureHelper, SynonymFinder}
 import de.unima.dws.oamatching.pipeline.registry.SelectionRegistry
 import de.unima.dws.oamatching.pipeline.util.TimeTaker
+import org.apache.commons.math.linear.OpenMapRealMatrix
+import org.apache.commons.math.stat.correlation.PearsonsCorrelation
+import org.semanticweb.owlapi.model.IRI
 
 import scala.collection.immutable.Map
+import scala.collection.mutable
 import scala.collection.parallel.ForkJoinTaskSupport
 import scala.collection.parallel.immutable.ParMap
 
@@ -66,9 +71,9 @@ object MatchingPipelineCore extends LazyLogging {
     val tester_file = new File("matchings/" + problem.data_set_name + "/matchings/" + problem.name + "_raw_matchings" + ".csv")
     //create feature vector only if some config parameter is set
     val filtered_outlier_analysis_vector: FeatureVector = if (tester_file.exists()) {
-      if(reuse_vectors){
+      if (reuse_vectors) {
         FeatureVector(problem.name, null, null, null, null)
-      }else {
+      } else {
         VectorUtil.readFromMatchingFile(tester_file, problem.name)
       }
     } else {
@@ -88,6 +93,124 @@ object MatchingPipelineCore extends LazyLogging {
     (alignment, filtered_outlier_analysis_vector)
   }
 
+  def filterMatchingProblem(problem: MatchingProblem): MatchingProblem = {
+    val classes_to_keep_o1 = mutable.HashSet[IRI]()
+    val classes_to_keep_o2 = mutable.HashSet[IRI]()
+
+
+    for (class_o1: IRI <- problem.ontology1.base_values.classes;
+         class_o2: IRI <- problem.ontology2.base_values.classes) {
+      val classes_to_names_o1: ExtractedFields = problem.ontology1.classes_to_names.get(class_o1).get
+      val classes_to_names_o2: ExtractedFields = problem.ontology2.classes_to_names.get(class_o2).get
+
+      val names_1 = List(classes_to_names_o1.label, classes_to_names_o1.fragment, classes_to_names_o1.comment)
+      val names_2 = List(classes_to_names_o2.label, classes_to_names_o2.fragment, classes_to_names_o2.comment)
+
+
+      val scores: List[Double] = for (name_1 <- names_1;
+                                      name_2 <- names_2;
+                                      if (name_1.isDefined && name_2.isDefined)) yield {
+        val scores: List[Double] = for (token_1 <- StringMeasureHelper.tokenize_combined_all(name_1.get);
+                                        token_2 <- StringMeasureHelper.tokenize_combined_all(name_2.get)) yield {
+
+          SynonymFinder.get_syn_overlap_score(token_1.toLowerCase, token_2.toLowerCase)
+        }
+        val best_score: Double = scores.sum / scores.size.toDouble
+        best_score
+      }
+      val syn_sim_score = scores.sum / scores.size.toDouble
+      if (syn_sim_score >= 0.25) {
+        classes_to_keep_o1.+=(class_o1)
+        classes_to_keep_o2.+=(class_o2)
+        println(class_o1.toString + " ---- " + class_o2.toString + " :" + syn_sim_score)
+      } else {
+        Option.empty
+      }
+    }
+
+
+    val op_to_keep_o1 = mutable.HashSet[IRI]()
+    val op_to_keep_o2 = mutable.HashSet[IRI]()
+
+
+    for (object_prop_o1: IRI <- problem.ontology1.base_values.object_properties;
+         object_prop_o2: IRI <- problem.ontology2.base_values.object_properties) {
+      val object_prop_to_names_o1: ExtractedFields = problem.ontology1.object_properties_to_names.get(object_prop_o1).get
+      val object_prop_to_names_o2: ExtractedFields = problem.ontology2.object_properties_to_names.get(object_prop_o2).get
+
+      val names_1 = List(object_prop_to_names_o1.label, object_prop_to_names_o1.fragment, object_prop_to_names_o1.comment)
+      val names_2 = List(object_prop_to_names_o2.label, object_prop_to_names_o2.fragment, object_prop_to_names_o2.comment)
+
+
+      val scores: List[Double] = for (name_1 <- names_1;
+                                      name_2 <- names_2;
+                                      if (name_1.isDefined && name_2.isDefined)) yield {
+        val scores: List[Double] = for (token_1 <- StringMeasureHelper.tokenize_combined_all(name_1.get);
+                                        token_2 <- StringMeasureHelper.tokenize_combined_all(name_2.get)) yield {
+          val stem1 = StringMeasureHelper.porter_stem(token_1.toLowerCase)
+          val stem2 = StringMeasureHelper.porter_stem(token_2.toLowerCase)
+          SynonymFinder.get_syn_overlap_score(stem1, stem2)
+        }
+        val best_score: Double = scores.sum / scores.size.toDouble
+        best_score
+      }
+      val syn_sim_score = scores.sum / scores.size.toDouble
+      if (syn_sim_score >= 0.25) {
+        op_to_keep_o1.+=(object_prop_o1)
+        op_to_keep_o2.+=(object_prop_o2)
+        println(object_prop_o1.toString + " ---- " + object_prop_o2.toString + " :" + syn_sim_score)
+      } else {
+        Option.empty
+      }
+    }
+
+
+    val dp_to_keep_o1 = mutable.HashSet[IRI]()
+    val dp_to_keep_o2 = mutable.HashSet[IRI]()
+
+
+    for (data_prop_o1: IRI <- problem.ontology1.base_values.data_properties;
+         data_prop_o2: IRI <- problem.ontology2.base_values.data_properties) {
+      val data_prop_to_names_o1: ExtractedFields = problem.ontology1.data_properties_to_names.get(data_prop_o1).get
+      val data_prop_to_names_o2: ExtractedFields = problem.ontology2.data_properties_to_names.get(data_prop_o2).get
+
+      val names_1 = List(data_prop_to_names_o1.label, data_prop_to_names_o1.fragment, data_prop_to_names_o1.comment)
+      val names_2 = List(data_prop_to_names_o2.label, data_prop_to_names_o2.fragment, data_prop_to_names_o2.comment)
+
+
+      val scores: List[Double] = for (name_1 <- names_1;
+                                      name_2 <- names_2;
+                                      if (name_1.isDefined && name_2.isDefined)) yield {
+        val scores: List[Double] = for (token_1 <- StringMeasureHelper.tokenize_combined_all(name_1.get);
+                                        token_2 <- StringMeasureHelper.tokenize_combined_all(name_2.get)) yield {
+          val stem1 = StringMeasureHelper.porter_stem(token_1.toLowerCase)
+          val stem2 = StringMeasureHelper.porter_stem(token_2.toLowerCase)
+          SynonymFinder.get_syn_overlap_score(stem1, stem2)
+        }
+        val best_score: Double = scores.sum / scores.size.toDouble
+        best_score
+      }
+      val syn_sim_score = scores.sum / scores.size.toDouble
+      if (syn_sim_score > 0.25) {
+        dp_to_keep_o1.+=(data_prop_o1)
+        dp_to_keep_o2.+=(data_prop_o2)
+        println(data_prop_o1.toString + " ---- " + data_prop_o2.toString + " :" + syn_sim_score)
+      } else {
+        Option.empty
+      }
+    }
+
+    // Rebuild Problem
+    // rebuild ontology 1
+
+    val new_entities_o1 = EntitiesOntology(classes_to_keep_o1.toVector,op_to_keep_o1.toVector,dp_to_keep_o1.toVector)
+    val new_entities_o2 = EntitiesOntology(classes_to_keep_o2.toVector,op_to_keep_o2.toVector,dp_to_keep_o2.toVector)
+
+    val new_onto1 = OntologyLoader.updateBaseEntities(problem.ontology1, new_entities_o1)
+    val new_onto2 = OntologyLoader.updateBaseEntities(problem.ontology2, new_entities_o2)
+    MatchingProblem(new_onto1,new_onto2,problem.debug_onto1,problem.debug_onto2,problem.name,problem.data_set_name)
+  }
+
 
   /**
    * Creates a Feature Vector for a given problem
@@ -98,21 +221,28 @@ object MatchingPipelineCore extends LazyLogging {
   def createFeatureVector(problem: MatchingProblem, remove_correlated_threshold: Double, name_space_filter: Boolean): FeatureVector = {
 
     TimeTaker.takeTime("feature_vector")
+
+    TimeTaker.takeTime("filter_problems")
+    val filtered_problem = filterMatchingProblem(problem)
+    //val filtered_problem = problem
+    SynonymFinder.save_to_json()
+    TimeTaker.takeTime("filter_problems")
+
     logger.info("Start element Level Matching")
-    val onto1_namespace = problem.ontology1.name
-    val onto2_namespace = problem.ontology2.name
+    val onto1_namespace = filtered_problem.ontology1.name
+    val onto2_namespace = filtered_problem.ontology2.name
     val allowed_namespaces = List(onto1_namespace, onto2_namespace)
 
-    val individual_matcher_results: FeatureVector = matchAllIndividualMatchers(problem)
+    val individual_matcher_results: FeatureVector = matchAllIndividualMatchers(filtered_problem)
     logger.info("Element Level Matching Done")
 
     logger.info("Start remove correlated")
-     val uncorrelated_matcher_results: FeatureVector = removeCorrelatedMatchers(individual_matcher_results, remove_correlated_threshold)
+    val uncorrelated_matcher_results: FeatureVector = removeCorrelatedMatchers(individual_matcher_results, remove_correlated_threshold)
     logger.info("Remove correlated done")
 
-     val structural_matcher_results: Option[FeatureVector] =  matchAllStructuralMatchers(problem, uncorrelated_matcher_results)
+    val structural_matcher_results: Option[FeatureVector] = matchAllStructuralMatchers(filtered_problem, uncorrelated_matcher_results)
 
-     val outlier_analysis_vector: FeatureVector = if (structural_matcher_results.isDefined) VectorUtil.combineFeatureVectors(List(individual_matcher_results, structural_matcher_results.get), problem.name).get else individual_matcher_results
+    val outlier_analysis_vector: FeatureVector = if (structural_matcher_results.isDefined) VectorUtil.combineFeatureVectors(List(individual_matcher_results, structural_matcher_results.get), filtered_problem.name).get else individual_matcher_results
     logger.info("Vector Combination done")
 
     //name space filtering
@@ -135,7 +265,7 @@ object MatchingPipelineCore extends LazyLogging {
     logger.info("After feature selection Vector Size" + feature_selected.matcher_name_to_index.size)
 
     TimeTaker.takeTime("feature_vector")
-
+    print(feature_selected.transposed_vector.size)
     feature_selected
   }
 
@@ -194,7 +324,7 @@ object MatchingPipelineCore extends LazyLogging {
     val method_name = Config.loaded_config.getString("pipeline.selection.method")
     val fuzzy_value = Config.loaded_config.getDouble("pipeline.selection.fuzzy")
 
-    val selection_fct  = SelectionRegistry.configureSelectionMethod(fuzzy_value, method_name)
+    val selection_fct = SelectionRegistry.configureSelectionMethod(fuzzy_value, method_name)
     val selected: Map[MatchRelation, Double] = selection_fct(final_result.toMap, threshold, sourceOnto, targetOnto)
     // val selected: Map[MatchRelation, Double] = MatchingSelector.greedyRankSelectorSimple(final_result.toMap, threshold, sourceOnto, targetOnto)
     selected
@@ -312,6 +442,56 @@ object MatchingPipelineCore extends LazyLogging {
    * @return
    */
   def removeCorrelatedMatchers(feature_vector: FeatureVector, threshold: Double) = {
-    SparkJobs.removeCorrelatedFeatures(feature_vector, threshold)
+    removeCorrelatedFeatures(feature_vector, threshold)
+  }
+
+
+  /**
+   * Function to remove correlated features from the feature vector with apache spark capabilites
+   * @param feature_vector
+   * @param threshold
+   * @return
+   */
+  def removeCorrelatedFeatures(feature_vector: FeatureVector, threshold: Double): FeatureVector = {
+    logger.info("start spark job to remove correlated attributes")
+    val no_of_matcher: Int = feature_vector.matcher_index_to_name.size
+
+
+    val test: List[Array[Double]] = feature_vector.transposed_vector.view.map { case (matching, matchermap) => matchermap.values.toArray }.toList
+
+    val matrix = new OpenMapRealMatrix(test.size, no_of_matcher)
+    for ((column, index) <- test.zipWithIndex) {
+      matrix.setRow(index, column)
+    }
+
+    val start_time = System.currentTimeMillis()
+    val pearson = new PearsonsCorrelation(matrix)
+
+    val total_time = System.currentTimeMillis() - start_time
+
+    println("Pearson took total time: " + total_time)
+    val correlation_matrix = pearson.getCorrelationMatrix()
+
+
+    val to_be_removed: List[Int] = for (row <- List.range(0, test.size - 1);
+                                        column <- List.range(0, no_of_matcher);
+                                        if column > row;
+                                        if correlation_matrix.getColumn(column)(row) > threshold) yield {
+      column
+    }
+
+
+    val filtered_vector = feature_vector.vector.filterKeys(matcher_name => {
+      val matcher_index = feature_vector.matcher_name_to_index(matcher_name)
+      !to_be_removed.toSet.contains(matcher_index)
+    })
+
+    val filtered_feature_vector = VectorUtil.createVectorFromResult(filtered_vector, feature_vector.data_set_name)
+
+    logger.info("Total number of parameters to be removed by remove correlated spark Job" + to_be_removed.size)
+
+    System.gc()
+
+    filtered_feature_vector
   }
 }

@@ -51,6 +51,25 @@ object CommandRun extends LazyLogging {
 
   }
 
+  /**
+   * Runs a single Problem
+   * @param config
+   * @return
+   */
+  def runSingleProblemWithAlignment(config: RunConfigurationOneProblem, path_to_write:String):String = {
+    TimeTaker.takeTime("pipeline_and_evaluate")
+    val remove_corelated_for_structural = 0.5
+    //create alignment with pipeline
+    val alignment: Alignment = config.matching_pipline_separated(config.matchingProblem, config.class_threshold, config.dp_threshold, config.op_threshold, remove_corelated_for_structural)._1
+    //write alignment to file
+    val file_path= path_to_write+ File.separator + config.matchingProblem.name + ".rdf"
+    AlignmentParser.writeRDF(alignment, file_path)
+    //check if evaluation neccessary
+    val total = TimeTaker.takeTime("pipeline_and_evaluate")
+
+    file_path
+  }
+
 
   /**
    * Runs the whole platform on a specified dataset
@@ -119,6 +138,57 @@ object CommandRun extends LazyLogging {
     } else {
       Option.empty
     }
+
+    val mining_params: Map[String, Double] = Config.loaded_config.getObject("pipeline.mining").unwrapped().map(tuple => tuple._1 -> tuple._2.toString.toDouble).toMap
+    val pre_pro_params: Map[String, Double] = Config.loaded_config.getObject("pipeline.prepro.values").unwrapped().map(tuple => tuple._1 -> tuple._2.toString.toDouble).toMap
+    //build pipeline
+
+    val parameters: Map[String, Map[String, Double]] = Map("mining" -> mining_params, pre_pro -> pre_pro_params)
+
+    val outlier_function = RapidminerJobs.rapidminerOutlierDetection(rapidminerProcess.get, Config.loaded_config.getString("rapidminerconfig.tmp"), process_type, parameters, pre_pro) _
+    val outlier_function_separated = RapidminerJobs.rapidminerOutlierDetectionSeparated(rapidminerProcess.get, Config.loaded_config.getString("rapidminerconfig.tmp"), process_type, parameters, pre_pro) _
+    val norm_function = ScoreNormalizationRegistry.getNormFunction(norm_technique)
+    val matching_pipline: (MatchingProblem, Double, Double) => (Alignment, FeatureVector) = MatchingPipelineCore.createMatchingPipeline(outlier_function)(norm_function)
+    val matching_pipline_separated: (MatchingProblem, Double, Double, Double, Double) => (Alignment, FeatureVector) = MatchingPipelineCore.createMatchingPipelineSeparated(outlier_function_separated)(norm_function)
+
+    RunConfigurationOneProblem(class_threshold, class_threshold, dp_threshold, op_threshold, norm_technique, match_problem, evaluate, reference, true, matching_pipline, matching_pipline_separated)
+  }
+
+
+  /**
+   * Parse the pipeline config for one matching problem
+   * @return
+   */
+  def parseRunOneProblemConfigWithPath(path_to_onto1:String,path_to_onto2:String): RunConfigurationOneProblem = {
+    val class_threshold = Config.loaded_config.getDouble("pipeline.class_threshold")
+    val dp_threshold = Config.loaded_config.getDouble("pipeline.dp_threshold")
+    val op_threshold = Config.loaded_config.getDouble("pipeline.op_threshold")
+
+    val norm_technique = Config.loaded_config.getString("pipeline.norm")
+
+    val process_type = Config.loaded_config.getString("pipeline.outlier_method")
+
+    val pre_pro = Config.loaded_config.getString("pipeline.prepro.type")
+
+    val rapidminerProcess = if (pre_pro.equals("pca_variant")) {
+      OutlierRegistry.getProcessPCAVariant(process_type, true)
+    } else if (pre_pro.equals("pca_fixed")) {
+      OutlierRegistry.getProcessPCAFixed(process_type, true)
+    } else if (pre_pro.equals("remove_corr")) {
+      OutlierRegistry.getProcessRemoveCorrelated(process_type, true)
+    } else {
+      //default
+      OutlierRegistry.getProcessPCAVariant(process_type, true)
+    }
+
+    val sourceOnto = path_to_onto1
+    val targetOnto = path_to_onto2
+
+    val problem_name = Config.loaded_config.getString("pipeline.problem_name")
+
+    val match_problem = getMatchingProblem(sourceOnto, targetOnto, problem_name)
+    val evaluate = false
+    val reference = Option.empty
 
     val mining_params: Map[String, Double] = Config.loaded_config.getObject("pipeline.mining").unwrapped().map(tuple => tuple._1 -> tuple._2.toString.toDouble).toMap
     val pre_pro_params: Map[String, Double] = Config.loaded_config.getObject("pipeline.prepro.values").unwrapped().map(tuple => tuple._1 -> tuple._2.toString.toDouble).toMap

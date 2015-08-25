@@ -4,9 +4,6 @@ import java.io.{File, InputStream, PrintWriter}
 import java.net.URI
 
 import com.github.tototoshi.csv.CSVWriter
-import com.hp.hpl.jena.rdf.model._
-import com.hp.hpl.jena.rdf.model.impl.ResourceImpl
-import com.hp.hpl.jena.util.FileManager
 import de.dwslab.alcomox.ontology.IOntology
 import org.semanticweb.owlapi.model.{OWLLiteral, OWLOntology}
 
@@ -37,7 +34,7 @@ object AlignmentParser {
 
     val correspondences = cells.map(cell => {
       val entity1 = (cell \ "entity1")(0)
-      val entity2 = (cell \ "entity1")(0)
+      val entity2 = (cell \ "entity2")(0)
 
       val measure = (cell \ "measure")(0).text.toString().toDouble
 
@@ -144,30 +141,7 @@ object AlignmentParser {
 
   }
 
-  def getOntoProperty(alignment_parent: Resource, alignment_onto2_query: Property): String = {
 
-    val result = alignment_parent.listProperties(alignment_onto2_query).toList
-
-    val onto2_namespace = if (result.size() > 0) {
-
-
-      if (result.head.isInstanceOf[OWLLiteral]) {
-        result.head.getLiteral.toString
-      } else {
-        if (result.head.getObject.isResource) {
-          result.head.getObject().asResource().toString
-        } else {
-          ""
-        }
-      }
-
-
-    } else {
-      "nn"
-    }
-
-    onto2_namespace
-  }
 
   /**
    * Parsing an RDF based alignment

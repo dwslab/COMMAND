@@ -21,20 +21,6 @@ class TokenizedMatcherSpec extends UnitSpec {
     assert(tokenized_2.size == 3)
   }
 
-  "The tokenized scorer" should "work" in {
-    val test = MatcherRegistry.getMatcherByName("lin_stemmed").get.asInstanceOf[TokenizedStringMatcher]
-
-    val score = test.score("Alex_is_good","alexIsGood")
-    println(score)
-    assert(score > 0.0)
-    val test_string_1 = "has_the_first_name"
-    val test_string_2 = "hasFirstName"
-
-    val score2 = test.score(test_string_1,test_string_2)
-    println(score2)
-    assert(score2 > 0.0)
-
-  }
 
   "The tokenized scorer" should "align ontology correctly" in {
     val test_matcher = MatcherRegistry.getMatcherByName("lin").get.asInstanceOf[TokenizedStringMatcher]
